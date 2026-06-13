@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BantuNow Map</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --bg-dark-forest: #0B1612;
+            --surface-pine: #15241C;
+            --primary-neon: #00FF66;
+            --border-mint: #2A4D3E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3B5AA;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; background-color: var(--bg-dark-forest); overflow: hidden; }
+        #leaflet-map { height: 100%; width: 100%; }
+
+        /* Custom Leaflet Dark Mode Popup Styling */
+        .leaflet-popup-content-wrapper {
+            background: var(--surface-pine) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-mint);
+            border-radius: 12px;
+        }
+        .leaflet-popup-tip {
+            background: var(--surface-pine) !important;
+            border: 1px solid var(--border-mint);
+        }
+        .popup-btn {
+            display: block;
+            margin-top: 8px;
+            padding: 8px;
+            background: var(--primary-neon);
+            color: var(--bg-dark-forest);
+            text-align: center;
+            font-weight: bold;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="leaflet-map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    let map;
+    const markers = {};
+
+    function initMap() {
+        // Center map on Kuala Lumpur
+        map = L.map('leaflet-map', { zoomControl: false }).setView([3.1390, 101.6869], 12);
+
+        // Dark tiles matching the theme
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap & CartoDB',
+            maxZoom: 20
+        }).addTo(map);
+
+        // Notify Android that the map has initialized
+        if (window.AndroidInterface) {
+            window.AndroidInterface.onMapReady();
+        }
+    }
+
+    // Custom Neon DivIcon
+    const neonIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="background-color: var(--primary-neon); width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--bg-dark-forest); box-shadow: 0 0 12px var(--primary-neon);"></div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11]
+    });
+
+    // Function called from Android to add markers dynamically
+    function addJobMarker(id, lat, lng, title, pay) {
+        if (markers[id]) {
+            map.removeLayer(markers[id]);
+        }
+
+        const popupContent = `
+            <div style="font-family: sans-serif;">
+                <h4 style="margin: 0 0 4px 0; color: var(--text-primary);">${title}</h4>
+                <p style="margin: 0 0 8px 0; color: var(--primary-neon); font-weight: bold;">RM ${pay}</p>
+                <a href="javascript:void(0);" onclick="onMarkerClick('${id}')" class="popup-btn">Lihat Butiran</a>
+            </div>
+        `;
+
+        const marker = L.marker([lat, lng], { icon: neonIcon })
+            .addTo(map)
+            .bindPopup(popupContent);
+
+        markers[id] = marker;
+    }
+
+    // Send event back to Android when user clicks "Lihat Butiran"
+    function onMarkerClick(jobId) {
+        if (window.AndroidInterface) {
+            window.AndroidInterface.onJobSelected(jobId);
+        }
+    }
+
+    // Center on user coordinates
+    function centerOnLocation(lat, lng) {
+        map.setView([lat, lng], 14);
+    }
+
+    window.onload = initMap;
+</script>
+</body>
+</html>
