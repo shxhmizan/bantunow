@@ -43,7 +43,7 @@
         android:id="@+id/fab_bantubot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_bantubot_fab"
+        android:src="@drawable/ic_robot_new"
         android:contentDescription="BantuBot AI"
         app:backgroundTint="@color/primary_neon"
         app:tint="@color/bg_dark_forest"
