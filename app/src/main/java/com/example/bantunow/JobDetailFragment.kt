@@ -5,18 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.bantunow.databinding.FragmentWorkFormBinding
+import com.example.bantunow.databinding.FragmentJobDetailBinding
 
-class WorkFormFragment : Fragment() {
+class JobDetailFragment : Fragment() {
 
-    private var _binding: FragmentWorkFormBinding? = null
+    private var _binding: FragmentJobDetailBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentWorkFormBinding.inflate(inflater, container, false)
+        _binding = FragmentJobDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -25,10 +26,6 @@ class WorkFormFragment : Fragment() {
 
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
-        }
-
-        binding.btnSubmitTask.setOnClickListener {
-            // UI logic only
         }
     }
 

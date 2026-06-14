@@ -1,6 +1,8 @@
 package com.example.bantunow
 
 import android.os.Bundle
+import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.bantunow.databinding.ActivityMainBinding
@@ -21,10 +23,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
+    private fun loadFragment(fragment: Fragment, addToBackStack: Boolean = false) {
+        if (!addToBackStack) {
+            supportFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+        val transaction = supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
-            .commit()
+        
+        if (addToBackStack) {
+            transaction.addToBackStack(null)
+        }
+        transaction.commit()
     }
 
     private fun setupBottomNavigation() {
@@ -35,15 +44,15 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_create -> {
-                    loadFragment(WorkFormFragment())
+                    loadFragment(WorkFormFragment(), true)
                     true
                 }
                 R.id.nav_tasks -> {
-                    // Placeholder for UI navigation
+                    loadFragment(UserJobListFragment(), true)
                     true
                 }
                 R.id.nav_profile -> {
-                    // Placeholder for UI navigation
+                    loadFragment(ProfileFragment(), true)
                     true
                 }
                 else -> false
@@ -51,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fabBantubot.setOnClickListener {
-            // Placeholder for UI action
+            loadFragment(ChatbotFragment(), true)
         }
     }
 }
