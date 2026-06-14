@@ -41,6 +41,13 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.btnMenuHistory.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, UserJobListFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         binding.btnMenuTerms.setOnClickListener {
             // Placeholder: Could navigate to a simple text fragment or show a dialog
             parentFragmentManager.beginTransaction()
