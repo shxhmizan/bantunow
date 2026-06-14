@@ -1,29 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Dark Mode Theme -->
     <style name="Base.Theme.BantuNow" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Main Brand Colors -->
         <item name="colorPrimary">@color/primary_neon</item>
-        <item name="android:windowBackground">@color/bg_dark_forest</item>
-        <item name="android:statusBarColor">@color/bg_dark_forest</item>
-    </style>
+        <item name="colorOnPrimary">@color/bg_dark_forest</item>
 
-    <style name="WorkFormLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginBottom">8dp</item>
-    </style>
+        <!-- Background and Surface - Pure Black for Night -->
+        <item name="android:windowBackground">#000000</item>
+        <item name="android:statusBarColor">#000000</item>
+        <item name="colorSurface">#121212</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="colorSurfaceVariant">#1E1E1E</item>
+        <item name="colorOnSurfaceVariant">#B0B0B0</item>
 
-    <style name="WorkFormChip" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/surface_pine</item>
-        <item name="android:textColor">@color/text_secondary</item>
-        <item name="chipStrokeColor">@color/border_mint</item>
-        <item name="chipStrokeWidth">1dp</item>
-        <item name="rippleColor">@color/primary_neon</item>
-    </style>
-
-    <style name="CircleImage">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
+        <!-- Outline / Border -->
+        <item name="colorOutline">#2C2C2C</item>
+        <item name="colorOutlineVariant">#2C2C2C</item>
     </style>
 </resources>

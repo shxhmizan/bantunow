@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:paddingTop="48dp"
+        android:paddingBottom="86dp">
 
         <LinearLayout
             android:id="@+id/btn_back"
@@ -36,88 +38,187 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/settings"
+            android:text="Settings"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="?attr/colorOnBackground"/>
+
+        <!-- Profile Picture Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_settings_avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_user"
+                    app:shapeAppearanceOverlay="@style/CircleImage"
+                    app:strokeColor="@color/primary_neon"
+                    app:strokeWidth="2dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_change_avatar"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="bottom|end"
+                    app:cardCornerRadius="16dp"
+                    app:cardBackgroundColor="@color/primary_neon"
+                    app:cardElevation="4dp"
+                    app:strokeWidth="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_camera"
+                        app:tint="@color/bg_dark_forest" />
+                </com.google.android.material.card.MaterialCardView>
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Update Profile Picture"
+                android:textColor="@color/primary_neon"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Account Details"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Profile Update -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/surface_pine">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Full Name"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/et_settings_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:background="@drawable/bg_input_rounded"
+                    android:textColor="@color/white"
+                    android:text="Judge Demo"
+                    android:inputType="textPersonName"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="20dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Password"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/et_settings_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:background="@drawable/bg_input_rounded"
+                    android:textColor="@color/white"
+                    android:hint="••••••••"
+                    android:textColorHint="@color/text_secondary"
+                    android:inputType="textPassword"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="24dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_save_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Save Changes"
+                    android:textColor="@color/bg_dark_forest"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/primary_neon"
+                    app:cornerRadius="12dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preferences"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_marginBottom="12dp" />
 
         <!-- Theme Toggle -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+            app:cardBackgroundColor="@color/surface_pine">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="16dp"
                 android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_robot"
+                    app:tint="@color/primary_neon" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/theme_mode"
+                    android:layout_marginStart="16dp"
+                    android:text="Dark Mode"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
+                    android:textColor="@color/white"/>
+
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_theme"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Profile Update -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:cardBackgroundColor="?attr/colorSurface">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-                <TextView
-                    style="@style/WorkFormLabel"
-                    android:text="@string/change_name" />
-                <EditText
-                    android:id="@+id/et_settings_name"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp"
-                    android:background="@drawable/bg_input_rounded"
-                    android:textColor="?attr/colorOnSurface"
-                    android:text="Judge Demo"
-                    android:inputType="textPersonName"
-                    android:layout_marginBottom="16dp" />
-                <TextView
-                    style="@style/WorkFormLabel"
-                    android:text="@string/change_password" />
-                <EditText
-                    android:id="@+id/et_settings_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="12dp"
-                    android:background="@drawable/bg_input_rounded"
-                    android:textColor="?attr/colorOnSurface"
-                    android:hint="@string/new_password"
-                    android:inputType="textPassword"
-                    android:layout_marginBottom="16dp" />
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_save_settings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/save_changes"
-                    app:cornerRadius="8dp" />
+                    android:checked="true" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
