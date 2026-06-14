@@ -43,7 +43,7 @@ class ProfileFragment : Fragment() {
 
         binding.btnMenuHistory.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, UserJobListFragment())
+                .replace(R.id.fragment_container, JobHistoryFragment())
                 .addToBackStack(null)
                 .commit()
         }

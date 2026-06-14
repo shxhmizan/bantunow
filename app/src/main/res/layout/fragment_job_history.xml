@@ -6,7 +6,6 @@
     android:background="?android:attr/colorBackground">
 
     <LinearLayout
-        android:id="@+id/ll_main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -20,7 +19,9 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="24dp"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -39,43 +40,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_tasks_title"
+            android:text="Job History"
             android:textColor="?attr/colorOnBackground"
             android:textSize="24sp"
             android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/task_dashboard"
-                android:textColor="#BF360C"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_clipboard"
-                app:tint="#BF360C" />
-        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/all_tasks_related"
+            android:text="View all your successfully completed tasks."
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
-        <!-- IN PROGRESS SECTION -->
+        <!-- COMPLETED SECTION -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,22 +65,22 @@
             <View
                 android:layout_width="8dp"
                 android:layout_height="8dp"
-                android:background="@drawable/bg_dot_orange" />
+                android:background="@drawable/bg_dot_gray" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="IN PROGRESS (2)"
+                android:text="COMPLETED (2)"
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Sample Item 1 -->
+        <!-- Sample Completed Item 1 -->
         <include layout="@layout/item_user_job" />
 
-        <!-- Sample Item 2 -->
+        <!-- Sample Completed Item 2 -->
         <include layout="@layout/item_user_job" />
 
     </LinearLayout>
