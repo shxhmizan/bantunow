@@ -7,6 +7,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.bantunow.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +22,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupBottomNavigation()
+        
+        // Load default fragment
+        if (savedInstanceState == null) {
+            loadFragment(MapFragment())
+        }
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 
     // Set up local webview inside map view fragment
@@ -46,19 +58,19 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_map -> {
-                    // Load Map Fragment & initialize Map
+                    loadFragment(MapFragment())
                     true
                 }
                 R.id.nav_create -> {
-                    // Load Post Job Screen
+                    loadFragment(WorkFormFragment())
                     true
                 }
                 R.id.nav_tasks -> {
-                    // Load My Tasks List Fragment
+                    // Load My Tasks List Fragment (placeholder)
                     true
                 }
                 R.id.nav_profile -> {
-                    // Load Profile Screen
+                    // Load Profile Screen (placeholder)
                     true
                 }
                 else -> false
