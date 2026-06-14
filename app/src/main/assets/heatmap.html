@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BantuNow Heatmap</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body, html, #heatmap { height: 100%; width: 100%; margin: 0; padding: 0; background: #0B1612; }
+    </style>
+</head>
+<body>
+    <div id="heatmap"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script>
+        const map = L.map('heatmap', { zoomControl: false }).setView([3.1390, 101.6869], 11);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CartoDB',
+            maxZoom: 20
+        }).addTo(map);
+
+        // Simulated heatmap data [lat, lng, intensity]
+        const heatData = [
+            [3.1390, 101.6869, 0.8], [3.1412, 101.6860, 0.9], [3.1350, 101.6900, 0.7],
+            [3.1500, 101.7100, 0.6], [3.1200, 101.6700, 0.5], [3.1600, 101.7000, 0.8],
+            [3.1450, 101.6950, 1.0], [3.1300, 101.6800, 0.4], [3.1550, 101.7200, 0.7]
+        ];
+
+        L.heatLayer(heatData, {
+            radius: 25,
+            blur: 15,
+            maxZoom: 17,
+            gradient: {0.4: 'blue', 0.65: 'lime', 1: 'red'}
+        }).addTo(map);
+    </script>
+</body>
+</html>
