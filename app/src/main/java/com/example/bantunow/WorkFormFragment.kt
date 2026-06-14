@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.bantunow.databinding.FragmentWorkFormBinding
 
@@ -23,10 +22,7 @@ class WorkFormFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.btnSubmitTask.setOnClickListener {
-            Toast.makeText(context, "Tugasan Dihantar!", Toast.LENGTH_SHORT).show()
-        }
+        // UI logic only (e.g. setup listeners if needed for UI state)
     }
 
     override fun onDestroyView() {
