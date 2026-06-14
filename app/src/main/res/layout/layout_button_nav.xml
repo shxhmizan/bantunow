@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PETA"
+            android:text="@string/nav_map"
             android:textSize="10sp"
             android:textColor="@color/primary_neon"
             android:textStyle="bold"/>
@@ -44,12 +44,12 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_briefcase"
+            android:src="@drawable/ic_luggage"
             app:tint="@color/text_secondary"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BAGI KERJA"
+            android:text="@string/nav_give_job"
             android:textSize="10sp"
             android:textColor="@color/text_secondary"
             android:textStyle="bold"/>
@@ -81,7 +81,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="KERJA SAYA"
+            android:text="@string/nav_my_tasks"
             android:textSize="10sp"
             android:textColor="@color/text_secondary"
             android:textStyle="bold"/>
@@ -105,7 +105,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PROFIL"
+            android:text="@string/nav_profile"
             android:textSize="10sp"
             android:textColor="@color/text_secondary"
             android:textStyle="bold"/>

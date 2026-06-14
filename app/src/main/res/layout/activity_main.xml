@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark_forest">
+    android:background="?android:attr/colorBackground">
 
     <!-- Fragment Container / Screen Holder -->
     <FrameLayout
@@ -43,7 +43,7 @@
         android:id="@+id/fab_bantubot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_robot"
+        android:src="@drawable/ic_bantubot_fab"
         android:contentDescription="BantuBot AI"
         app:backgroundTint="@color/primary_neon"
         app:tint="@color/bg_dark_forest"

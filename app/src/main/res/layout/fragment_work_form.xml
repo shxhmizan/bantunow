@@ -3,107 +3,69 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark_forest"
+    android:background="?android:attr/colorBackground"
     android:scrollbars="none"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:paddingTop="48dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_chevron_right"
+                android:rotation="180"
+                app:tint="@color/text_secondary" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/back"
+                android:textColor="@color/text_secondary"
+                android:textStyle="bold" />
+        </LinearLayout>
+
         <!-- Title Header -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bagi Kerja"
-            android:textColor="@color/text_primary"
+            android:text="@string/nav_give_job"
+            android:textColor="?attr/colorOnBackground"
             android:textSize="26sp"
             android:textStyle="bold" />
-
-        <!-- Subtitle with Neon Mint Accent -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="4dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Buat Tugasan Baru "
-                android:textColor="@color/primary_neon"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_briefcase"
-                app:tint="@color/primary_neon" />
-        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Isikan maklumat tugasan untuk dipaparkan di peta."
+            android:text="Fill in the task details to display on map."
             android:textColor="@color/text_secondary"
             android:textSize="13sp"
             android:layout_marginBottom="24dp" />
 
-        <!-- 1. Category Chip Group -->
-        <TextView
-            style="@style/WorkFormLabel"
-            android:text="Jenis Tugasan" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cg_job_types"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="4dp"
-            app:singleSelection="true">
-
-            <com.google.android.material.chip.Chip
-                style="@style/WorkFormChip"
-                android:text="Pertukangan" />
-            <com.google.android.material.chip.Chip
-                style="@style/WorkFormChip"
-                android:text="Pembersihan" />
-            <com.google.android.material.chip.Chip
-                style="@style/WorkFormChip"
-                android:text="Penghantaran" />
-            <com.google.android.material.chip.Chip
-                style="@style/WorkFormChip"
-                android:text="Baik Pulih" />
-            <com.google.android.material.chip.Chip
-                style="@style/WorkFormChip"
-                android:text="Buruh Kasar" />
-            <com.google.android.material.chip.Chip
-                style="@style/WorkFormChip"
-                android:text="Bantuan Kecemasan" />
-            <com.google.android.material.chip.Chip
-                style="@style/WorkFormChip"
-                android:text="Lain-lain" />
-        </com.google.android.material.chip.ChipGroup>
-
         <!-- 2. Task Title Input -->
         <TextView
             style="@style/WorkFormLabel"
-            android:text="Tajuk" />
+            android:text="@string/task_title" />
 
         <EditText
             android:id="@+id/et_task_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:background="@drawable/bg_form_input"
-            android:textColor="@color/text_primary"
+            android:background="@drawable/bg_input_rounded"
+            android:textColor="?attr/colorOnSurface"
             android:textColorHint="@color/text_secondary"
-            android:hint="cth: Pasang Meja IKEA"
+            android:hint="e.g. IKEA Table Assembly"
             android:inputType="text"
             android:textSize="14sp"
             android:layout_marginBottom="20dp" />
@@ -111,7 +73,7 @@
         <!-- 3. Task Description Input -->
         <TextView
             style="@style/WorkFormLabel"
-            android:text="Penerangan" />
+            android:text="@string/task_desc" />
 
         <EditText
             android:id="@+id/et_task_desc"
@@ -120,10 +82,10 @@
             android:minLines="4"
             android:gravity="top|start"
             android:padding="16dp"
-            android:background="@drawable/bg_form_input"
-            android:textColor="@color/text_primary"
+            android:background="@drawable/bg_input_rounded"
+            android:textColor="?attr/colorOnSurface"
             android:textColorHint="@color/text_secondary"
-            android:hint="Jelaskan tugasan anda..."
+            android:hint="Describe your task..."
             android:textSize="14sp"
             android:layout_marginBottom="20dp" />
 
@@ -144,15 +106,15 @@
 
                 <TextView
                     style="@style/WorkFormLabel"
-                    android:text="Gaji (RM)" />
+                    android:text="@string/task_pay" />
 
                 <EditText
                     android:id="@+id/et_task_pay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:background="@drawable/bg_form_input"
-                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_input_rounded"
+                    android:textColor="?attr/colorOnSurface"
                     android:textColorHint="@color/text_secondary"
                     android:hint="25"
                     android:textSize="14sp"
@@ -168,15 +130,15 @@
 
                 <TextView
                     style="@style/WorkFormLabel"
-                    android:text="No. Telefon" />
+                    android:text="@string/task_phone" />
 
                 <EditText
                     android:id="@+id/et_task_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:background="@drawable/bg_form_input"
-                    android:textColor="@color/text_primary"
+                    android:background="@drawable/bg_input_rounded"
+                    android:textColor="?attr/colorOnSurface"
                     android:textColorHint="@color/text_secondary"
                     android:hint="012-345 6789"
                     android:textSize="14sp"
@@ -184,41 +146,10 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 5. Dashed Image Upload (Optional) -->
-        <TextView
-            style="@style/WorkFormLabel"
-            android:text="Gambar (Opsional)" />
-
-        <LinearLayout
-            android:id="@+id/layout_upload_image"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_dashed_border"
-            android:layout_marginBottom="20dp">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_camera"
-                app:tint="@color/text_secondary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Klik untuk muat naik"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-
         <!-- 6. Dashed Location Selector -->
         <TextView
             style="@style/WorkFormLabel"
-            android:text="Lokasi" />
+            android:text="Location" />
 
         <LinearLayout
             android:id="@+id/layout_get_location"
@@ -242,7 +173,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dapatkan Lokasi Saya"
+                android:text="@string/get_location"
                 android:textColor="@color/text_secondary"
                 android:textStyle="bold"
                 android:textSize="14sp" />
@@ -255,7 +186,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/primary_neon"
             android:textColor="@color/bg_dark_forest"
-            android:text="Hantar Tugasan"
+            android:text="@string/submit_task"
             android:textSize="16sp"
             android:textStyle="bold"
             android:padding="16dp"

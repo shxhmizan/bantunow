@@ -3,11 +3,11 @@
     <item
         android:id="@+id/nav_map"
         android:icon="@drawable/ic_map"
-        android:title="Peta" />
+        android:title="@string/nav_map" />
     <item
         android:id="@+id/nav_create"
-        android:icon="@drawable/ic_briefcase"
-        android:title="Bagi Kerja" />
+        android:icon="@drawable/ic_luggage"
+        android:title="@string/nav_give_job" />
     <item
         android:id="@+id/nav_placeholder"
         android:enabled="false"
@@ -15,9 +15,9 @@
     <item
         android:id="@+id/nav_tasks"
         android:icon="@drawable/ic_list"
-        android:title="Kerja Saya" />
+        android:title="@string/nav_my_tasks" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_user"
-        android:title="Profil" />
+        android:title="@string/nav_profile" />
 </menu>
