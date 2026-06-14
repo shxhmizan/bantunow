@@ -46,71 +46,71 @@
 </head>
 <body>
 
-<div id="leaflet-map"></div>
+    <div id="leaflet-map"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    let map;
-    const markers = {};
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let map;
+        const markers = {};
 
-    function initMap() {
-        // Center map on Kuala Lumpur
-        map = L.map('leaflet-map', { zoomControl: false }).setView([3.1390, 101.6869], 12);
+        function initMap() {
+            // Center map on Kuala Lumpur
+            map = L.map('leaflet-map', { zoomControl: false }).setView([3.1390, 101.6869], 12);
 
-        // Dark tiles matching the theme
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap & CartoDB',
-            maxZoom: 20
-        }).addTo(map);
+            // Dark tiles matching the theme
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap & CartoDB',
+                maxZoom: 20
+            }).addTo(map);
 
-        // Notify Android that the map has initialized
-        if (window.AndroidInterface) {
-            window.AndroidInterface.onMapReady();
-        }
-    }
-
-    // Custom Neon DivIcon
-    const neonIcon = L.divIcon({
-        className: 'custom-div-icon',
-        html: `<div style="background-color: var(--primary-neon); width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--bg-dark-forest); box-shadow: 0 0 12px var(--primary-neon);"></div>`,
-        iconSize: [22, 22],
-        iconAnchor: [11, 11]
-    });
-
-    // Function called from Android to add markers dynamically
-    function addJobMarker(id, lat, lng, title, pay) {
-        if (markers[id]) {
-            map.removeLayer(markers[id]);
+            // Notify Android that the map has initialized
+            if (window.AndroidInterface) {
+                window.AndroidInterface.onMapReady();
+            }
         }
 
-        const popupContent = `
-            <div style="font-family: sans-serif;">
-                <h4 style="margin: 0 0 4px 0; color: var(--text-primary);">${title}</h4>
-                <p style="margin: 0 0 8px 0; color: var(--primary-neon); font-weight: bold;">RM ${pay}</p>
-                <a href="javascript:void(0);" onclick="onMarkerClick('${id}')" class="popup-btn">Lihat Butiran</a>
-            </div>
-        `;
+        // Custom Neon DivIcon
+        const neonIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: `<div style="background-color: var(--primary-neon); width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--bg-dark-forest); box-shadow: 0 0 12px var(--primary-neon);"></div>`,
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
+        });
 
-        const marker = L.marker([lat, lng], { icon: neonIcon })
-            .addTo(map)
-            .bindPopup(popupContent);
+        // Function called from Android to add markers dynamically
+        function addJobMarker(id, lat, lng, title, pay) {
+            if (markers[id]) {
+                map.removeLayer(markers[id]);
+            }
 
-        markers[id] = marker;
-    }
+            const popupContent = `
+                <div style="font-family: sans-serif;">
+                    <h4 style="margin: 0 0 4px 0; color: var(--text-primary);">${title}</h4>
+                    <p style="margin: 0 0 8px 0; color: var(--primary-neon); font-weight: bold;">RM ${pay}</p>
+                    <a href="javascript:void(0);" onclick="onMarkerClick('${id}')" class="popup-btn">Lihat Butiran</a>
+                </div>
+            `;
 
-    // Send event back to Android when user clicks "Lihat Butiran"
-    function onMarkerClick(jobId) {
-        if (window.AndroidInterface) {
-            window.AndroidInterface.onJobSelected(jobId);
+            const marker = L.marker([lat, lng], { icon: neonIcon })
+                .addTo(map)
+                .bindPopup(popupContent);
+
+            markers[id] = marker;
         }
-    }
 
-    // Center on user coordinates
-    function centerOnLocation(lat, lng) {
-        map.setView([lat, lng], 14);
-    }
+        // Send event back to Android when user clicks "Lihat Butiran"
+        function onMarkerClick(jobId) {
+            if (window.AndroidInterface) {
+                window.AndroidInterface.onJobSelected(jobId);
+            }
+        }
 
-    window.onload = initMap;
-</script>
+        // Center on user coordinates
+        function centerOnLocation(lat, lng) {
+            map.setView([lat, lng], 14);
+        }
+
+        window.onload = initMap;
+    </script>
 </body>
 </html>
