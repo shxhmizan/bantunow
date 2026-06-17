@@ -1,16 +1,27 @@
 package com.example.bantunow
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.bantunow.databinding.ActivityMainBinding
+import com.example.bantunow.BuildConfig
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    /***
+     * This field stores the URL to the application's Firebase Realtime Database.
+     * It must be set using the DATABASE_URL property in the database.properties file within
+     * the project source code root directory.
+     */
+    private lateinit var databaseUrl:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        databaseUrl = BuildConfig.DATABASE_URL
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
