@@ -1,11 +1,9 @@
 package com.example.bantunow
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.bantunow.databinding.ActivityMainBinding
-import com.example.bantunow.BuildConfig
 
 class MainActivity : AppCompatActivity() {
 
