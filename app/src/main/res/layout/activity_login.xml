@@ -132,6 +132,19 @@
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/et_password" />
 
+            <Button
+                android:id="@+id/btn_login_google"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="@color/primary_neon"
+                android:text="@string/login_using_google"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_dark_forest"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/btn_login" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -139,7 +152,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_login">
+                app:layout_constraintTop_toBottomOf="@id/btn_login_google">
 
                 <TextView
                     android:layout_width="wrap_content"
