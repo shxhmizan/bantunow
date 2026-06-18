@@ -23,6 +23,7 @@
     <string name="task_pay">Pay (RM)</string>
     <string name="task_phone">Phone No.</string>
     <string name="get_location">Get My Location</string>
+    <string name="update_location">Update My Location</string>
     <string name="submit_task">Submit Task</string>
     <string name="active_monthly_leaderboard">Monthly Leaderboard</string>
     <string name="theme_mode">Theme Mode</string>

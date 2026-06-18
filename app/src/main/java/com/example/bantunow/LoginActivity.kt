@@ -21,8 +21,6 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
 
-    private lateinit var databaseUrl:String
-
     private lateinit var database: FirebaseDatabase
 
     private lateinit var authWebClientId:String
@@ -35,10 +33,9 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         authWebClientId = BuildConfig.AUTH_WEB_CLIENT_ID
-        databaseUrl = BuildConfig.DATABASE_URL
 
         firebaseAuth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance(databaseUrl)
+        database = FirebaseDatabase.getInstance(BuildConfig.DATABASE_URL)
         credentialManager = CredentialManager.create(this)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)

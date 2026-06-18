@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.credentials.CredentialManager
+import com.example.bantunow.data.model.UserExtra
 import com.example.bantunow.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -38,7 +39,7 @@ class RegisterActivity : AppCompatActivity() {
                     data ->
                 val dataExists = data.exists()
                 if(! dataExists){
-                    val userInitData = UserExtra(0)
+                    val userInitData = UserExtra(0, user.displayName)
                     userData.setValue(userInitData).addOnCompleteListener {
                             task -> if(! task.isSuccessful){
                         Log.e("UserRegistration","Failed to save user data in database!")
