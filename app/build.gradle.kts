@@ -3,18 +3,19 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
-//The database configurstion can be stored in a file called database,properties in the project root directory
-//The contents of the database.properties file should look like this:
-//DATABASE_URL="<YOUR FIREBASE DATABASE URL HERE>"
 
-val databasePropertiesFile = rootProject.file("database.properties")
-
-val databaseProperties = Properties()
-
-if (databasePropertiesFile.exists()){
-    databaseProperties.load(FileInputStream(databasePropertiesFile))
+/**
+ * The below code segments loads environment-specific application properties included during build time
+ * This includes the application database and authentication configuurations
+ * The properties are to be included in a file called 'app.properties' located in the project root directory
+ */
+val appPropertiesFile = rootProject.file("app.properties")
+val appProperties = Properties()
+if (appPropertiesFile.exists()){
+    appProperties.load(FileInputStream(appPropertiesFile))
 }
 
 
@@ -35,8 +36,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        //Defines configuration field for database url
-        buildConfigField("String", "DATABASE_URL", databaseProperties.getProperty("DATABASE_URL",""))
+        //Adds the application properties that can be referenced in application code
+        buildConfigField("String", "DATABASE_URL", appProperties.getProperty("DATABASE_URL","null"))
+        buildConfigField("String", "AUTH_WEB_CLIENT_ID", appProperties.getProperty("AUTH_WEB_CLIENT_ID","null"))
     }
 
     buildTypes {
@@ -63,6 +65,12 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
+    implementation(libs.googleid)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
