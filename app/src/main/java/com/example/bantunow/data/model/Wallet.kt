@@ -1,8 +1,7 @@
-package com.example.bantunow
+package com.example.bantunow.data.model
 
 class Wallet(
     var userID : String? = null,
-    var walletID : String? = null,
     var currentBalance : Long? = 0,
     ) {
 

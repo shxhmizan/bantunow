@@ -1,7 +1,4 @@
-package com.example.bantunow
-
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+package com.example.bantunow.data.model
 
 /**
  * The UserExtra class represents extra data of registered user, separate from user data stored in
@@ -9,7 +6,8 @@ import com.google.firebase.database.FirebaseDatabase
  * @property bantuPoints The total application points for this user
  */
 class UserExtra (
-    var bantuPoints:Long? = null,
+    var bantuPoints:Long = 0,
+    var displayName:String? = null
 ){
     companion object {
         /**
