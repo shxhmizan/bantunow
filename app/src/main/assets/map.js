@@ -17,7 +17,7 @@ class TaskMapResponse {
         if(! Object.hasOwn(srcData,"type")){
             console.log("ERROR: Invalid TaskMapResponse data has no response type.")
         }
-        if(! Object.hasOwn(srcData,"contents"){
+        if(! Object.hasOwn(srcData,"contents")){
             console.log("ERROR: Invalid TaskMapResponse data has no contents field.")
         }
         this.type = srcData.type;
