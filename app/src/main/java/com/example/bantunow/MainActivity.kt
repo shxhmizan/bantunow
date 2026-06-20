@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
 
+    private lateinit var taskMapManager: TaskMapManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        taskMapManager = TaskMapManager(database,fusedLocationClient)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -63,6 +66,10 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),1001)
         }
         return fusedLocationClient.lastLocation
+    }
+
+    fun getTaskMapManager() : TaskMapManager {
+        return taskMapManager
     }
 
     private fun loadFragment(fragment: Fragment) {

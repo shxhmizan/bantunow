@@ -1,15 +1,21 @@
 package com.example.bantunow.data.model
 
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.getValue
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
+@Serializable
 class Task (
     var ownerID:String? = null,
     var workerID:String? = null,
-    var taskTitle:String? = null,
-    var taskDesc:String? = null,
-    var taskPaymentAmount:Long? = null,
-    var location:String? = null,
+    var title:String? = null,
+    var desc:String? = null,
+    var paymentAmount:Long? = null,
+    var latitude:Double? = null,
+    val longitude:Double? = null,
     var contactNo:String? = null,
     var progressPercentage:Int = 0
 ){
@@ -27,13 +33,19 @@ class Task (
             }
         }
 
-        fun getNearbyTasks(database: FirebaseDatabase, callback: (List<com.example.bantunow.data.model.Task>) -> Unit){
+        /**
+         * Retrieves all nearby tasks from the database, then executes a callback on a Map of all retrieved tasks
+         * @param database The FirebaseDatabase instance to query from, usually passed from an Activity
+         * @param callback The callback function to run on the tasks
+         */
+        fun applyOnNearbyTasks(database: FirebaseDatabase, callback: (tasks: Map<String,com.example.bantunow.data.model.Task> ?) -> Unit){
             val root = database.getReference(TASK_DOCS_ROOT)
-            val taskRef = root.get().addOnSuccessListener {
+            root.get().addOnSuccessListener {
                 taskSnapshot ->
-                val tasks = taskSnapshot.children.mapNotNull {
-                    it.getValue(com.example.bantunow.data.model.Task::class.java)
-                }
+                val tasks = taskSnapshot.getValue<Map<String,com.example.bantunow.data.model.Task>>()
+                /*tasks?.forEach { (id, task) ->
+                    Log.d("MapFragment","Task $id : $task")
+                }*/
                 callback(tasks)
             }
         }
@@ -43,5 +55,9 @@ class Task (
         val root = database.getReference(TASK_DOCS_ROOT)
         val newTaskRef = root.push()
         return newTaskRef.setValue(this)
+    }
+
+    override fun toString(): String {
+        return Json.encodeToString(this)
     }
 }

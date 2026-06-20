@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 
@@ -68,6 +69,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.androidx.webkit)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     implementation(libs.googleid)
@@ -76,4 +78,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    implementation(libs.kotlinx.serialization.json)
 }
