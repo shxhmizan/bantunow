@@ -78,10 +78,14 @@
         </LinearLayout>
 
         <!-- Sample Completed Item 1 -->
-        <include layout="@layout/item_user_job" />
+        <include
+            android:id="@+id/item_history_1"
+            layout="@layout/item_user_job" />
 
         <!-- Sample Completed Item 2 -->
-        <include layout="@layout/item_user_job" />
+        <include
+            android:id="@+id/item_history_2"
+            layout="@layout/item_user_job" />
 
     </LinearLayout>
 </ScrollView>
