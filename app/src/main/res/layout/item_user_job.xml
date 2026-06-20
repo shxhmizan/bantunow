@@ -128,6 +128,17 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/btn_delete_job"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_delete"
+            android:padding="4dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/danger" />
+
+        <ImageView
             android:id="@+id/iv_chevron"
             android:layout_width="20dp"
             android:layout_height="20dp"
