@@ -1,5 +1,6 @@
 package com.example.bantunow.data.model
 
+import android.location.Location
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.FirebaseDatabase
@@ -13,7 +14,7 @@ class Task (
     var workerID:String? = null,
     var title:String? = null,
     var desc:String? = null,
-    var paymentAmount:Long? = null,
+    var paymentAmount:Long? = null, //Payment amount in cents
     var latitude:Double? = null,
     val longitude:Double? = null,
     var contactNo:String? = null,

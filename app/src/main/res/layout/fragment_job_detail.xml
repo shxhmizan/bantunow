@@ -49,6 +49,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvTaskProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -150,6 +151,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvTaskTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -159,6 +161,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvTaskDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -199,6 +202,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tvTaskPay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="RM 69"
@@ -234,6 +238,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tvTaskOwner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nurul Huda"
@@ -281,6 +286,7 @@
                             app:tint="#4CAF50" />
 
                         <TextView
+                            android:id="@+id/tvTaskPhoneNo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
@@ -330,6 +336,7 @@
                             app:tint="#3F51B5" />
 
                         <TextView
+                            android:id="@+id/tv_task_distance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
@@ -350,6 +357,7 @@
             android:weightSum="2">
 
             <Button
+                android:id="@+id/btnCall"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -363,6 +371,7 @@
                 app:iconTint="@color/white" />
 
             <Button
+                android:id="@+id/btnWhatsapp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -377,6 +386,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/btnTaskComplete"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="16dp"
@@ -388,6 +398,7 @@
             app:iconTint="@color/white" />
 
         <Button
+            android:id="@+id/btnMap"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="16dp"

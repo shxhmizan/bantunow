@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
+import com.example.bantunow.data.model.Task
 import com.example.bantunow.databinding.FragmentMapBinding
 
 class MapFragment : Fragment() {
@@ -92,6 +93,7 @@ class MapFragment : Fragment() {
         binding.mapWebView.loadUrl("https://appassets.androidplatform.net/assets/map.html")
 
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
