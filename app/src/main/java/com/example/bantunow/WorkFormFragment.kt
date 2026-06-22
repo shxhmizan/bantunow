@@ -35,6 +35,19 @@ class WorkFormFragment : Fragment() {
         val auth = FirebaseAuth.getInstance()
 
         binding.layoutGetLocation.setOnClickListener {
+            // Check for permissions first
+            if (androidx.core.content.ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    1001
+                )
+                return@setOnClickListener
+            }
+
             activity.requestLocation().addOnCompleteListener { task ->
                 if (task.isSuccessful && task.result != null) {
                     latitude = task.result.latitude
@@ -42,7 +55,8 @@ class WorkFormFragment : Fragment() {
                     binding.tvLocationLabel.text = "Coordinate: ${String.format("%.4f", latitude)}, ${String.format("%.4f", longitude)}"
                     Toast.makeText(context, "Location retrieved!", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Failed to get location", Toast.LENGTH_SHORT).show()
+                    Log.e("WorkForm", "Location task failed: ${task.exception}")
+                    Toast.makeText(context, "Failed to get location. Ensure GPS is on.", Toast.LENGTH_SHORT).show()
                 }
             }
         }

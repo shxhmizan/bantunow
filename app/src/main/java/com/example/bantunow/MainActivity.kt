@@ -42,23 +42,27 @@ class MainActivity : AppCompatActivity() {
             @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
             override fun onTaskSelected(task: com.example.bantunow.data.model.Task) {
                 val taskCreator = task.ownerID ?: return
-                UserExtra.getUserExtraByID(database, taskCreator){
-                        userExtra ->
-                    fusedLocationClient.lastLocation.addOnCompleteListener {
-                        val location = it.result
-                        val taskLocation = Location(location)
-                        taskLocation.latitude = task.latitude!!
-                        taskLocation.longitude = task.longitude!!
-                        val distance = location.distanceTo(taskLocation).toDouble()
-                        if(taskCreator == firebaseAuth.currentUser?.uid){
-                            loadFragment(TaskDetailsFragment(task,distance,userExtra))
+                
+                // Fetch user info from Firestore instead of RTDB
+                firestore.collection("users").document(taskCreator).get()
+                    .addOnSuccessListener { document ->
+                        val userExtra = document.toObject(UserExtra::class.java)
+                        
+                        fusedLocationClient.lastLocation.addOnCompleteListener { locationTask ->
+                            val location = locationTask.result
+                            val distance = if (location != null && task.latitude != null && task.longitude != null) {
+                                val taskLocation = Location("task")
+                                taskLocation.latitude = task.latitude!!
+                                taskLocation.longitude = task.longitude!!
+                                location.distanceTo(taskLocation).toDouble() / 1000.0 // in KM
+                            } else 0.0
+                            
+                            if(taskCreator == firebaseAuth.currentUser?.uid){
+                                loadFragment(TaskDetailsFragment(task, distance, userExtra), true)
+                            }
+                            else loadFragment(TaskAcceptFragment(task, distance, userExtra), true)
                         }
-                        else loadFragment(TaskAcceptFragment(task,distance,userExtra))
                     }
-                }
-
-
-
             }
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -92,10 +96,9 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1001)
         }
         
-        // Request fresh location instead of just last known
         return fusedLocationClient.getCurrentLocation(
             com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
-            null
+            com.google.android.gms.tasks.CancellationTokenSource().token
         )
     }
 

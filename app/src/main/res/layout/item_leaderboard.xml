@@ -7,7 +7,7 @@
     android:gravity="center_vertical">
 
     <TextView
-        android:id="@+id/tv_rank"
+        android:id="@+id/tvRank"
         android:layout_width="32dp"
         android:layout_height="wrap_content"
         android:text="1"
@@ -16,7 +16,7 @@
         android:textSize="16sp"/>
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/tvName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -24,10 +24,11 @@
         android:textColor="?attr/colorOnSurface"/>
 
     <TextView
-        android:id="@+id/tv_tasks_count"
+        android:id="@+id/tvPoints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="25 Tasks"
-        android:textColor="@color/text_secondary"
-        android:textSize="12sp"/>
+        android:text="0 pts"
+        android:textColor="@color/primary_neon"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
 </LinearLayout>

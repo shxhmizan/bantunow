@@ -40,6 +40,16 @@ android {
         //Adds the application properties that can be referenced in application code
         buildConfigField("String", "DATABASE_URL", "\"https://bantunow-default-rtdb.asia-southeast1.firebasedatabase.app/\"")
         buildConfigField("String", "AUTH_WEB_CLIENT_ID", "\"76839332560-6b6v6v6v6v6v6v6v6v6v6v6v6v6v6v6v.apps.googleusercontent.com\"")
+        
+        // Gemini API Key from local.properties
+        val geminiKey = project.rootProject.file("local.properties").let {
+            if (it.exists()) {
+                val props = Properties()
+                props.load(it.inputStream())
+                props.getProperty("GEMINI_API_KEY", "")
+            } else ""
+        }
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
     }
 
     buildTypes {
@@ -76,6 +86,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.material)
     implementation(libs.play.services.location)
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

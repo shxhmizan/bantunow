@@ -36,7 +36,17 @@ class ProfileFragment : Fragment() {
         }
 
         binding.btnMenuLeaderboard.setOnClickListener {
-            Toast.makeText(context, "Leaderboard coming soon", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, LeaderboardFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.btnMenuHistory.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, UserJobListFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 
