@@ -76,4 +76,5 @@
     <string name="suggestion_how_to_give">How to post a job?</string>
     <string name="suggestion_points">How to earn points?</string>
     <string name="bot_welcome">Hello! I am BantuBot. How can I help you today?</string>
+    <string name="default_web_client_id" translatable="false">155687453657-hq1sibpbjse1mqcio312idfqvdtri3qs.apps.googleusercontent.com</string>
 </resources>

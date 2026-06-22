@@ -3,6 +3,8 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 //The database configurstion can be stored in a file called database,properties in the project root directory
@@ -20,11 +22,7 @@ if (databasePropertiesFile.exists()){
 
 android {
     namespace = "com.example.bantunow"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.bantunow"
@@ -36,7 +34,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         //Defines configuration field for database url
-        buildConfigField("String", "DATABASE_URL", databaseProperties.getProperty("DATABASE_URL",""))
+        val dbUrl = databaseProperties.getProperty("DATABASE_URL", "")
+        buildConfigField("String", "DATABASE_URL", "\"${dbUrl.removeSurrounding("\"")}\"")
+
+        //Defines configuration fields for the Supabase project. Override SUPABASE_URL /
+        //SUPABASE_KEY in database.properties to point at a different project.
+        val supabaseUrl = databaseProperties.getProperty("SUPABASE_URL", "https://rqitqgtaivdtdqbkjrap.supabase.co")
+        val supabaseKey = databaseProperties.getProperty("SUPABASE_KEY", "sb_publishable_uUgYmcsp0Iy6lWRUVIVEtQ_BT8Ygm9C")
+        buildConfigField("String", "SUPABASE_URL", "\"${supabaseUrl.removeSurrounding("\"")}\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"${supabaseKey.removeSurrounding("\"")}\"")
     }
 
     buildTypes {
@@ -63,7 +69,17 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
     implementation(libs.material)
+    implementation(libs.androidx.recyclerview)
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.postgrest)
+    implementation(libs.ktor.client.android)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

@@ -90,24 +90,21 @@
                 android:background="@drawable/bg_dot_orange" />
 
             <TextView
+                android:id="@+id/tv_in_progress_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="IN PROGRESS (2)"
+                android:text="IN PROGRESS (0)"
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Sample Item 1 -->
-        <include
-            android:id="@+id/item_active_1"
-            layout="@layout/item_user_job" />
-
-        <!-- Sample Item 2 -->
-        <include
-            android:id="@+id/item_active_2"
-            layout="@layout/item_user_job" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_jobs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
 
     </LinearLayout>
 </ScrollView>
