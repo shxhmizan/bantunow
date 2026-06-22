@@ -64,6 +64,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvTaskTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -73,6 +74,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvTaskDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -108,7 +110,9 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="10sp"
                         android:textStyle="bold" />
+
                     <TextView
+                        android:id="@+id/tvTaskPay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="RM 100"
@@ -139,7 +143,9 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="10sp"
                         android:textStyle="bold" />
+
                     <TextView
+                        android:id="@+id/tvTaskOwner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Shahmizan"
@@ -180,7 +186,9 @@
                             android:layout_height="14dp"
                             android:src="@drawable/ic_phone"
                             app:tint="#4CAF50" />
+
                         <TextView
+                            android:id="@+id/tvTaskPhoneNo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
@@ -213,7 +221,9 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="10sp"
                         android:textStyle="bold" />
+
                     <TextView
+                        android:id="@+id/tvTaskDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="3.1522, 101.6965"

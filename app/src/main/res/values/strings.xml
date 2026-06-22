@@ -6,8 +6,10 @@
     <string name="email">EMAIL</string>
     <string name="password">PASSWORD</string>
     <string name="login">Login</string>
+    <string name="login_using_google">Login with Google</string>
     <string name="no_account">No account yet? </string>
     <string name="register_now">Register Now</string>
+    <string name="register_using_google">Register with Google Account</string>
     <string name="register_title">Create Account</string>
     <string name="register_subtitle">Join the BantuNow community today.</string>
     <string name="full_name">FULL NAME</string>
@@ -21,6 +23,7 @@
     <string name="task_pay">Pay (RM)</string>
     <string name="task_phone">Phone No.</string>
     <string name="get_location">Get My Location</string>
+    <string name="update_location">Update My Location</string>
     <string name="submit_task">Submit Task</string>
     <string name="active_monthly_leaderboard">Monthly Leaderboard</string>
     <string name="theme_mode">Theme Mode</string>
