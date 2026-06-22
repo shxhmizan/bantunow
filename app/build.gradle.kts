@@ -38,8 +38,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         //Adds the application properties that can be referenced in application code
-        buildConfigField("String", "DATABASE_URL", appProperties.getProperty("DATABASE_URL","null"))
-        buildConfigField("String", "AUTH_WEB_CLIENT_ID", appProperties.getProperty("AUTH_WEB_CLIENT_ID","null"))
+        buildConfigField("String", "DATABASE_URL", "\"https://bantunow-default-rtdb.asia-southeast1.firebasedatabase.app/\"")
+        buildConfigField("String", "AUTH_WEB_CLIENT_ID", "\"76839332560-6b6v6v6v6v6v6v6v6v6v6v6v6v6v6v6v.apps.googleusercontent.com\"")
     }
 
     buildTypes {
@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.androidx.webkit)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
     implementation(libs.googleid)
     implementation(libs.material)
     implementation(libs.play.services.location)

@@ -65,7 +65,7 @@
                     android:id="@+id/tv_profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Judge Demo"
+                    android:text="Loading..."
                     android:textColor="?attr/colorOnBackground"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -73,35 +73,9 @@
                     android:id="@+id/tv_profile_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="demo@bantunow.com"
+                    android:text="..."
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Level 5"
-                        android:textColor="@color/primary_neon"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:background="@drawable/bg_chip_status_mint"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="2dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="Expert Bantu"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="italic" />
-                </LinearLayout>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -127,9 +101,10 @@
                     android:orientation="vertical"
                     android:gravity="center">
                     <TextView
+                        android:id="@+id/tv_points"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1,250"
+                        android:text="0"
                         android:textColor="@color/primary_neon"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -154,9 +129,10 @@
                     android:orientation="vertical"
                     android:gravity="center">
                     <TextView
+                        android:id="@+id/tv_completed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12"
+                        android:text="0"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -181,9 +157,10 @@
                     android:orientation="vertical"
                     android:gravity="center">
                     <TextView
+                        android:id="@+id/tv_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4.9"
+                        android:text="0.0"
                         android:textColor="#FFC107"
                         android:textSize="18sp"
                         android:textStyle="bold" />

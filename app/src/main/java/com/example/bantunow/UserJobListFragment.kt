@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bantunow.databinding.FragmentUserJobListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 class UserJobListFragment : Fragment() {
 
@@ -60,7 +59,7 @@ class UserJobListFragment : Fragment() {
         // For simplicity, we query jobs where ownerId == userId
         db.collection("jobs")
             .whereEqualTo("ownerId", userId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
+            // .orderBy("createdAt", Query.Direction.DESCENDING) // Requires a composite index
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     Toast.makeText(context, "Error fetching tasks: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -68,8 +67,10 @@ class UserJobListFragment : Fragment() {
                 }
 
                 val jobList = snapshots?.toObjects(Job::class.java) ?: emptyList()
-                jobAdapter.updateJobs(jobList)
-                binding.tvInProgressCount.text = "IN PROGRESS (${jobList.size})"
+                // Sort manually in client side to avoid index requirement for now
+                val sortedList = jobList.sortedByDescending { it.createdAt }
+                jobAdapter.updateJobs(sortedList)
+                binding.tvInProgressCount.text = "IN PROGRESS (${sortedList.size})"
             }
     }
 

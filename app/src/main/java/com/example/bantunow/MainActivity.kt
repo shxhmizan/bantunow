@@ -33,10 +33,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         database = FirebaseDatabase.getInstance(BuildConfig.DATABASE_URL)
+        DataSeeder.seedDataIfNeeded()
         firebaseAuth = FirebaseAuth.getInstance()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        taskMapManager = object : TaskMapManager(database,fusedLocationClient) {
+        val firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+        taskMapManager = object : TaskMapManager(firestore, fusedLocationClient) {
             @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
             override fun onTaskSelected(task: com.example.bantunow.data.model.Task) {
                 val taskCreator = task.ownerID ?: return
@@ -83,13 +85,18 @@ class MainActivity : AppCompatActivity() {
     fun requestLocation() : Task<Location> {
         val permGranted = ContextCompat.checkSelfPermission(
             this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
         if (permGranted != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),1001)
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1001)
         }
-        return fusedLocationClient.lastLocation
+        
+        // Request fresh location instead of just last known
+        return fusedLocationClient.getCurrentLocation(
+            com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
+            null
+        )
     }
 
     fun getTaskMapManager() : TaskMapManager {
@@ -120,6 +127,10 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(WorkFormFragment(), true)
                     true
                 }
+                R.id.nav_chatbot -> {
+                    loadFragment(ChatbotFragment(), true)
+                    true
+                }
                 R.id.nav_tasks -> {
                     loadFragment(UserJobListFragment(), true)
                     true
@@ -130,10 +141,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
-        }
-
-        binding.fabBantubot.setOnClickListener {
-            loadFragment(ChatbotFragment(), true)
         }
     }
 }

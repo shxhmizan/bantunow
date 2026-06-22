@@ -13,134 +13,36 @@
             --surface-dark: #15241C;
             --text-light: #1A1A1A;
             --text-dark: #FFFFFF;
+            --bg-dark-forest: #0B1612;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; overflow: hidden; background: transparent; }
         #leaflet-map { height: 100%; width: 100%; }
 
         .leaflet-popup-content-wrapper {
-            border-radius: 16px;
-            padding: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-radius: 24px !important;
+            padding: 8px !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important;
+            background: white !important;
+            color: #212121 !important;
         }
-        .leaflet-popup-content { margin: 8px; }
-
-        .popup-container { font-family: 'Inter', sans-serif; min-width: 200px; }
-        .popup-tags { display: flex; gap: 4px; margin-bottom: 8px; }
-        .tag { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
-        .tag-open { background: #E0F2F1; color: #00897B; }
-        .tag-category { background: #F5F5F5; color: #616161; }
-
-        .popup-title { font-size: 16px; font-weight: bold; margin-bottom: 4px; }
-        .popup-desc { font-size: 12px; color: #757575; margin-bottom: 12px; }
-
-        .popup-footer { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .popup-pay { font-size: 18px; font-weight: bold; color: #BF360C; }
-        .popup-distance { font-size: 11px; color: #757575; background: #F5F5F5; padding: 4px 8px; border-radius: 12px; }
-
-        .popup-btn {
-            display: block; width: 100%; padding: 12px;
-            background: var(--primary-neon); color: #0B1612;
-            text-align: center; font-weight: bold; border-radius: 12px;
-            text-decoration: none; font-size: 14px;
+        .leaflet-popup-content { margin: 0 !important; }
+        .leaflet-popup-tip { background: white !important; }
+        .leaflet-popup-close-button {
+            padding: 12px !important;
+            color: #9e9e9e !important;
+            font-size: 20px !important;
         }
 
-        /* Marker Styles */
-        .marker-container {
-            width: 40px; height: 40px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        .marker-open { background: var(--primary-neon); }
-        .marker-progress { background: var(--orange-status); }
-        .marker-icon { width: 20px; height: 20px; }
+        .custom-div-icon { background: none; border: none; }
 
-        /* Dark Mode overrides */
-        .dark-mode .leaflet-popup-content-wrapper { background: #1A1A1A; color: white; }
-        .dark-mode .popup-title { color: white; }
-        .dark-mode .popup-desc { color: #A3B5AA; }
-        .dark-mode .tag-category { background: #2A4D3E; color: #A3B5AA; }
-        .dark-mode .popup-distance { background: #2A4D3E; color: #A3B5AA; }
+        /* Control positions */
+        .leaflet-top.leaflet-right { top: 70px; }
     </style>
 </head>
 <body>
     <div id="leaflet-map"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        let map;
-        let markers = {};
-        let currentTheme = 'light';
-
-        function initMap() {
-            map = L.map('leaflet-map', { zoomControl: false }).setView([3.1390, 101.6869], 12);
-            updateMapStyle();
-
-            if (window.AndroidInterface) {
-                window.AndroidInterface.onMapReady();
-            }
-        }
-
-        function updateMapStyle() {
-            const style = currentTheme === 'dark' ? 'dark_all' : 'rastertiles/voyager';
-            const url = currentTheme === 'dark'
-                ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-                : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-
-            L.tileLayer(url, {
-                attribution: '&copy; OpenStreetMap & CartoDB',
-                maxZoom: 20
-            }).addTo(map);
-        }
-
-        function setTheme(theme) {
-            currentTheme = theme;
-            if (theme === 'dark') document.body.classList.add('dark-mode');
-            else document.body.classList.remove('dark-mode');
-            updateMapStyle();
-        }
-
-        const icons = {
-            open: L.divIcon({
-                className: '',
-                html: '<div class="marker-container marker-open"><img src="https://img.icons8.com/material-rounded/24/000000/briefcase.png" class="marker-icon"/></div>',
-                iconSize: [40, 40], iconAnchor: [20, 20]
-            }),
-            progress: L.divIcon({
-                className: '',
-                html: '<div class="marker-container marker-progress"><img src="https://img.icons8.com/material-rounded/24/ffffff/clock.png" class="marker-icon"/></div>',
-                iconSize: [40, 40], iconAnchor: [20, 20]
-            })
-        };
-
-        function addJobMarker(id, lat, lng, title, pay, category, desc, distance, status) {
-            if (markers[id]) map.removeLayer(markers[id]);
-
-            const popupContent = `
-                <div class="popup-container">
-                    <div class="popup-tags">
-                        <span class="tag tag-open">${status === 'open' ? 'Open' : 'In Progress'}</span>
-                        <span class="tag tag-category">${category}</span>
-                    </div>
-                    <div class="popup-title">${title}</div>
-                    <div class="popup-desc">${desc}</div>
-                    <div class="popup-footer">
-                        <div class="popup-pay">RM ${pay}</div>
-                        <div class="popup-distance">📍 ${distance} km</div>
-                    </div>
-                    <a href="javascript:void(0);" onclick="onMarkerClick('${id}')" class="popup-btn">Lihat & Terima</a>
-                </div>
-            `;
-
-            const icon = status === 'open' ? icons.open : icons.progress;
-            const marker = L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup(popupContent);
-            markers[id] = marker;
-        }
-
-        function onMarkerClick(jobId) {
-            if (window.AndroidInterface) window.AndroidInterface.onJobSelected(jobId);
-        }
-
-        window.onload = initMap;
-    </script>
+    <script src="map.js"></script>
 </body>
 </html>

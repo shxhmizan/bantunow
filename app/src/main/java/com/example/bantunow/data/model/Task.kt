@@ -16,7 +16,7 @@ class Task (
     var desc:String? = null,
     var paymentAmount:Long? = null, //Payment amount in cents
     var latitude:Double? = null,
-    val longitude:Double? = null,
+    var longitude:Double? = null,
     var contactNo:String? = null,
     var progressPercentage:Int = 0
 ){

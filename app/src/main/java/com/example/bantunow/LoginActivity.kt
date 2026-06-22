@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         //If user clicks login with Google
-        binding.btnLoginGoogle.setOnClickListener {
+        binding.btnGoogleLogin.setOnClickListener {
             lifecycleScope.launch {
                 requestGoogleLogin()
             }

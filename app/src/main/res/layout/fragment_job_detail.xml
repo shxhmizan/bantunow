@@ -18,19 +18,17 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_chevron_right"
                 android:rotation="180"
                 app:tint="@color/text_secondary" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/back"
+                android:text="Kembali"
                 android:textColor="@color/text_secondary"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -39,16 +37,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/task_progress"
+                android:text="PROGRES TUGASAN"
                 android:textColor="@color/text_secondary"
                 android:textSize="10sp"
                 android:textStyle="bold" />
-
             <TextView
+                android:id="@+id/tvProgressPercent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -59,6 +56,7 @@
         </RelativeLayout>
 
         <ProgressBar
+            android:id="@+id/progressBarTask"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="8dp"
@@ -71,37 +69,26 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OPEN"
-                android:textColor="#FFB74D"
+                android:text="TERBUKA"
+                android:textColor="#FF7043"
                 android:textSize="9sp"
                 android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="IN PROGRESS"
-                android:textColor="#FFB74D"
+                android:text="BERJALAN"
+                android:textColor="#FF7043"
                 android:textSize="9sp"
                 android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="COMPLETED"
+                android:text="SELESAI"
                 android:textColor="@color/text_secondary"
                 android:textSize="9sp"
                 android:textStyle="bold" />
@@ -112,30 +99,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:orientation="horizontal">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_chip_status_orange"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
-                android:text="@string/in_progress"
+                android:text="SEDANG BERJALAN"
                 android:textColor="#E65100"
                 android:textSize="10sp"
                 android:textStyle="bold" />
-
             <TextView
+                android:id="@+id/tvCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/bg_chip_status_mint"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
-                android:text="ELECTRICAL WIRING"
+                android:text="WIRING ELEKTRIK"
                 android:textColor="#004D40"
                 android:textSize="10sp"
                 android:textStyle="bold" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,26 +128,28 @@
                 android:background="@drawable/bg_chip_status_blue"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
-                android:text="@string/you_are_performer"
+                android:text="ANDA PELAKSANA"
                 android:textColor="#1A237E"
                 android:textSize="10sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvTaskTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Garden Lamp Wiring"
+            android:text="Wiring Lampu Taman"
             android:textColor="?attr/colorOnBackground"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvTaskDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Want to install new ceiling fan, ceiling already drilled."
+            android:text="Nak pasang kipas siling baru, ceiling dah siap drilling."
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
@@ -179,31 +166,28 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp"
                 app:cardBackgroundColor="#FFF8E1">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
+                    android:padding="20dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PAY"
+                        android:text="GAJI"
                         android:textColor="@color/text_secondary"
                         android:textSize="10sp"
                         android:textStyle="bold" />
-
                     <TextView
+                        android:id="@+id/tvTaskPay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="RM 69"
                         android:textColor="#BF360C"
-                        android:textSize="20sp"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -214,31 +198,28 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp"
                 app:cardBackgroundColor="#E0F2F1">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
+                    android:padding="20dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/owner"
+                        android:text="PEMILIK"
                         android:textColor="@color/text_secondary"
                         android:textSize="10sp"
                         android:textStyle="bold" />
-
                     <TextView
+                        android:id="@+id/tvTaskOwner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nurul Huda"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -249,38 +230,33 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp"
                 app:cardBackgroundColor="#F5F5F5">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
+                    android:padding="20dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PHONE"
+                        android:text="TELEFON"
                         android:textColor="@color/text_secondary"
                         android:textSize="10sp"
                         android:textStyle="bold" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:src="@drawable/ic_phone"
                             app:tint="#4CAF50" />
-
                         <TextView
+                            android:id="@+id/tvTaskPhoneNo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
@@ -298,42 +274,37 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp"
                 app:cardBackgroundColor="#E8EAF6">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
+                    android:padding="20dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/distance"
+                        android:text="JARAK"
                         android:textColor="@color/text_secondary"
                         android:textSize="10sp"
                         android:textStyle="bold" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:src="@drawable/ic_location"
                             app:tint="#3F51B5" />
-
                         <TextView
+                            android:id="@+id/tvTaskDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:text="140.4 km"
+                            android:text="140.4 km dari anda"
                             android:textColor="#3F51B5"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -348,55 +319,63 @@
             android:layout_marginTop="24dp"
             android:orientation="horizontal"
             android:weightSum="2">
-
-            <Button
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCall"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="#4CAF50"
-                android:text="@string/call"
+                android:backgroundTint="#00C853"
+                android:text="Call"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                app:cornerRadius="12dp"
+                app:cornerRadius="16dp"
                 app:icon="@drawable/ic_phone"
                 app:iconTint="@color/white" />
-
-            <Button
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnWhatsapp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="#4CAF50"
-                android:text="@string/whatsapp"
+                android:backgroundTint="#26D366"
+                android:text="WhatsApp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                app:cornerRadius="12dp"
+                app:cornerRadius="16dp"
                 app:icon="@drawable/ic_send"
                 app:iconTint="@color/white" />
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnComplete"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="64dp"
             android:layout_marginTop="16dp"
-            android:backgroundTint="#4CAF50"
-            android:text="@string/mark_completed"
+            android:backgroundTint="#00C853"
+            android:text="KERJA SELESAI"
             android:textColor="@color/white"
-            app:cornerRadius="12dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
             app:icon="@drawable/ic_list"
-            app:iconTint="@color/white" />
+            app:iconGravity="textStart"
+            app:iconPadding="8dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBackToMap"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="64dp"
             android:layout_marginTop="16dp"
             android:backgroundTint="#212121"
-            android:text="@string/back_to_map"
+            android:text="Kembali ke Peta"
             android:textColor="@color/white"
-            app:cornerRadius="12dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
             app:icon="@drawable/ic_map"
-            app:iconTint="@color/white" />
+            app:iconGravity="textStart"
+            app:iconPadding="8dp" />
 
     </LinearLayout>
 </ScrollView>

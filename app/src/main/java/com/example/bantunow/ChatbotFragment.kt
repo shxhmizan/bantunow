@@ -18,7 +18,6 @@ class ChatbotFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val greetings = arrayOf(
-        "Any new ideas to explore?",
         "How can I help you today?",
         "Ready to find some jobs?",
         "Need help posting a task?",

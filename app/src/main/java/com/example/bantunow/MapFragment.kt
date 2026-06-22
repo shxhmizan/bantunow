@@ -17,6 +17,11 @@ import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import com.example.bantunow.data.model.Task
 import com.example.bantunow.databinding.FragmentMapBinding
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+
+@Serializable
+data class InsightData(val count: Int, val avg: String, val pop: String)
 
 class MapFragment : Fragment() {
 
@@ -35,6 +40,32 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        binding.switchInsights.setOnCheckedChangeListener { _, isChecked ->
+            binding.insightContainer.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
+        // Setup listener for JS console logs to update native insights
+        binding.mapWebView.webChromeClient = object : android.webkit.WebChromeClient() {
+            override fun onConsoleMessage(consoleMessage: android.webkit.ConsoleMessage?): Boolean {
+                val msg = consoleMessage?.message() ?: ""
+                if (msg.startsWith("INSIGHTS:")) {
+                    try {
+                        val json = msg.substring(9)
+                        val data = Json.decodeFromString<InsightData>(json)
+                        activity?.runOnUiThread {
+                            binding.statTotal.tvStatValue.text = data.count.toString()
+                            binding.miniActive.tvMiniValue.text = data.count.toString()
+                            binding.miniAverage.tvMiniValue.text = "RM ${data.avg}"
+                            binding.miniPopular.tvMiniValue.text = data.pop
+                        }
+                    } catch (e: Exception) {
+                        Log.e("MapFragment", "Error parsing insights", e)
+                    }
+                }
+                return super.onConsoleMessage(consoleMessage)
+            }
+        }
+
         // Simple UI-only WebView setup
         binding.mapWebView.settings.javaScriptEnabled = true
         binding.mapWebView.settings.domStorageEnabled = true
@@ -60,11 +91,6 @@ class MapFragment : Fragment() {
             .build()
 
         binding.mapWebView.webViewClient = object : WebViewClient(){
-            /**
-             * Special handler for map web view client when its rendering process
-             * is stopped
-             * This handles the error gracefully to avoid crashing the entire app
-             */
             override fun onRenderProcessGone(
                 view: WebView?,
                 detail: RenderProcessGoneDetail?
@@ -92,8 +118,22 @@ class MapFragment : Fragment() {
 
         binding.mapWebView.loadUrl("https://appassets.androidplatform.net/assets/map.html")
 
+        setupInsights()
     }
 
+    private fun setupInsights() {
+        binding.statTotal.tvStatLabel.text = "ACTIVE WORK"
+        binding.statTotal.tvStatValue.text = "0"
+
+        binding.miniActive.tvMiniLabel.text = "ACTIVE 10KM"
+        binding.miniActive.tvMiniValue.text = "0"
+
+        binding.miniAverage.tvMiniLabel.text = "AVERAGE INCOME"
+        binding.miniAverage.tvMiniValue.text = "RM 0"
+
+        binding.miniPopular.tvMiniLabel.text = "POPULAR"
+        binding.miniPopular.tvMiniValue.text = "-"
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
