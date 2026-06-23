@@ -40,8 +40,17 @@ class TaskDetailsFragment(val task: Task, val distance: Double, val userExtra: U
         binding.tvTaskPay.text = "RM ${(task.paymentAmount?.toDouble()?.div(100) ?: 0.0).toInt()}"
         binding.tvTaskDistance.text = "${String.format("%.1f", distance)} km dari anda"
         
-        binding.tvProgressPercent.text = "0%"
-        binding.progressBarTask.progress = 0
+        val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+        if (task.ownerID == currentUserId) {
+            binding.tvRoleBadge.text = "ANDA PEMILIK"
+            binding.btnComplete.visibility = View.GONE // Owner doesn't complete their own task as a worker
+        } else {
+            binding.tvRoleBadge.text = "ANDA PELAKSANA"
+            binding.btnComplete.visibility = View.VISIBLE
+        }
+
+        binding.tvProgressPercent.text = "${task.progressPercentage}%"
+        binding.progressBarTask.progress = task.progressPercentage.toInt()
 
         binding.btnCall.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)

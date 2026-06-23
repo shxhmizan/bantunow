@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.bantunow.databinding.FragmentWorkFormBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Locale
 
 class WorkFormFragment : Fragment() {
 
@@ -35,40 +36,26 @@ class WorkFormFragment : Fragment() {
         val auth = FirebaseAuth.getInstance()
 
         binding.layoutGetLocation.setOnClickListener {
-            // Check for permissions first
-            if (androidx.core.content.ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
-                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                    1001
-                )
-                return@setOnClickListener
-            }
-
-            activity.requestLocation().addOnCompleteListener { task ->
-                if (task.isSuccessful && task.result != null) {
-                    latitude = task.result.latitude
-                    longitude = task.result.longitude
-                    binding.tvLocationLabel.text = "Coordinate: ${String.format("%.4f", latitude)}, ${String.format("%.4f", longitude)}"
-                    Toast.makeText(context, "Location retrieved!", Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.e("WorkForm", "Location task failed: ${task.exception}")
-                    Toast.makeText(context, "Failed to get location. Ensure GPS is on.", Toast.LENGTH_SHORT).show()
-                }
-            }
+            fetchCurrentLocation()
         }
 
         binding.btnSubmitTask.setOnClickListener {
-            val title = binding.etTaskTitle.text.toString()
-            val desc = binding.etTaskDesc.text.toString()
-            val payString = binding.etTaskPay.text.toString()
-            val phone = binding.etTaskPhone.text.toString()
+            val title = binding.etTaskTitle.text.toString().trim()
+            val desc = binding.etTaskDesc.text.toString().trim()
+            val payString = binding.etTaskPay.text.toString().trim()
+            val phone = binding.etTaskPhone.text.toString().trim()
+
+            Log.d("WorkForm", "Title: '$title', Desc: '$desc', Pay: '$payString', Phone: '$phone', Lat: $latitude")
 
             if (title.isEmpty() || desc.isEmpty() || payString.isEmpty() || phone.isEmpty() || latitude == null) {
-                Toast.makeText(context, "Please fill in all fields and get location", Toast.LENGTH_SHORT).show()
+                val errorMsg = StringBuilder("Missing fields:")
+                if (title.isEmpty()) errorMsg.append(" Title")
+                if (desc.isEmpty()) errorMsg.append(" Description")
+                if (payString.isEmpty()) errorMsg.append(" Pay")
+                if (phone.isEmpty()) errorMsg.append(" Phone")
+                if (latitude == null) errorMsg.append(" Location")
+                
+                Toast.makeText(requireContext(), errorMsg.toString(), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -84,23 +71,40 @@ class WorkFormFragment : Fragment() {
                 "longitude" to longitude,
                 "contactNo" to phone,
                 "status" to "open",
-                "createdAt" to com.google.firebase.Timestamp.now()
+                "createdAt" to com.google.firebase.Timestamp.now(),
+                "progressPercentage" to 0L,
+                "category" to "General"
             )
 
             db.collection("tasks").add(taskData)
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Task posted successfully!", Toast.LENGTH_LONG).show()
-                    parentFragmentManager.popBackStack()
+                    if (isAdded) {
+                        Toast.makeText(requireContext(), "Task posted successfully!", Toast.LENGTH_LONG).show()
+                        parentFragmentManager.popBackStack()
+                    }
                 }
                 .addOnFailureListener { e ->
-                    Log.e("WorkForm", "Error adding task", e)
-                    Toast.makeText(context, "Failed to post task", Toast.LENGTH_SHORT).show()
+                    if (isAdded) {
+                        Log.e("WorkForm", "Error adding task", e)
+                        Toast.makeText(requireContext(), "Failed to post task", Toast.LENGTH_SHORT).show()
+                    }
                 }
         }
         
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+    }
+
+    private fun fetchCurrentLocation() {
+        // Automatically use the requested coordinate: 4.183993, 101.218559
+        latitude = 4.183993
+        longitude = 101.218559
+        
+        binding.tvLocationLabel.text = String.format(Locale.US, "Coordinate: %.6f, %.6f", latitude, longitude)
+        binding.ivLocationCheck.visibility = View.VISIBLE
+        binding.layoutGetLocation.setBackgroundResource(R.drawable.bg_input_rounded)
+        Toast.makeText(requireContext(), "Location retrieved!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

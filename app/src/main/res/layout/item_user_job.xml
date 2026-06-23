@@ -37,19 +37,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tv_category_chip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/bg_chip_status_mint"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:text="ELECTRICAL WIRING"
-                android:textColor="#004D40"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/tv_role_chip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,6 +124,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/danger" />
+
+        <ImageView
+            android:id="@+id/btn_edit_job"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="12dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_edit"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_delete_job"
+            app:tint="@color/primary_neon" />
 
         <ImageView
             android:id="@+id/iv_chevron"

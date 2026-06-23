@@ -172,12 +172,21 @@
 
             <TextView
                 android:id="@+id/tvLocationLabel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/get_location"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivLocationCheck"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_list"
+                android:visibility="gone"
+                app:tint="@color/primary_neon" />
         </LinearLayout>
 
         <!-- 7. Bottom Submit Button -->
@@ -196,6 +205,10 @@
             app:iconPadding="8dp"
             app:iconTint="@color/bg_dark_forest"
             app:cornerRadius="12dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
 
     </LinearLayout>
 </ScrollView>

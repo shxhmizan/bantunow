@@ -40,11 +40,17 @@ if (mapListenerExists) {
                 const categories = {};
 
                 for (const [id, task] of Object.entries(contents)) {
+                    // Safety check for coordinates
+                    if (task.latitude == null || task.longitude == null) {
+                        console.warn("Skipping task with missing coordinates: " + id);
+                        continue;
+                    }
+
                     const dist = calculateDistance(userCoords.lat, userCoords.lng, task.latitude, task.longitude);
 
                     if (dist <= 10) {
                         nearbyCount++;
-                        totalIncome += (task.paymentAmount / 100);
+                        totalIncome += ((task.paymentAmount || 0) / 100);
                         const cat = task.category || "General";
                         categories[cat] = (categories[cat] || 0) + 1;
                     }
@@ -52,12 +58,9 @@ if (mapListenerExists) {
                     addJobMarker(id, task.latitude, task.longitude, task.title, task.paymentAmount, task.desc, dist);
                 }
 
-                // Update insights via Android if needed, but for now we calculate
                 const avgIncome = nearbyCount > 0 ? (totalIncome / nearbyCount).toFixed(0) : 0;
                 const popular = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b, "-");
 
-                // We'll send these stats back to Android to update the native UI
-                // Note: Implementation requires a new request type or simple console log for now
                 console.log("INSIGHTS:" + JSON.stringify({count: nearbyCount, avg: avgIncome, pop: popular}));
 
             } else if (type === TaskMapResponse.CURRENT_LOCATION) {
@@ -107,7 +110,7 @@ const neonIcon = L.divIcon({
 });
 
 function addJobMarker(id, lat, lng, title, payCents, desc, dist) {
-    const payFormatted = (payCents / 100).toFixed(0);
+    const payFormatted = ((payCents || 0) / 100).toFixed(0);
     const popupContent = `
         <div class="popup-container" style="min-width: 250px; font-family: sans-serif; padding: 10px;">
             <div style="display: flex; gap: 8px; margin-bottom: 12px;">

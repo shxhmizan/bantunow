@@ -1,9 +1,11 @@
 package com.example.bantunow
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -13,37 +15,38 @@ import com.example.bantunow.databinding.ActivityMainBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
+    lateinit var binding: ActivityMainBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    private lateinit var database: FirebaseDatabase
-
     private lateinit var firebaseAuth: FirebaseAuth
-
     private lateinit var taskMapManager: TaskMapManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("MainActivity", "onCreate")
 
-        database = FirebaseDatabase.getInstance(BuildConfig.DATABASE_URL)
-        DataSeeder.seedDataIfNeeded()
         firebaseAuth = FirebaseAuth.getInstance()
+        if (firebaseAuth.currentUser == null) {
+            Log.w("MainActivity", "No user logged in, redirecting to Login")
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+        val firestore = FirebaseFirestore.getInstance()
         taskMapManager = object : TaskMapManager(firestore, fusedLocationClient) {
             @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
             override fun onTaskSelected(task: com.example.bantunow.data.model.Task) {
                 val taskCreator = task.ownerID ?: return
                 
-                // Fetch user info from Firestore instead of RTDB
                 firestore.collection("users").document(taskCreator).get()
                     .addOnSuccessListener { document ->
                         val userExtra = document.toObject(UserExtra::class.java)
@@ -60,40 +63,37 @@ class MainActivity : AppCompatActivity() {
                             if(taskCreator == firebaseAuth.currentUser?.uid){
                                 loadFragment(TaskDetailsFragment(task, distance, userExtra), true)
                             }
-                            else loadFragment(TaskAcceptFragment(task, distance, userExtra), true)
+                            else loadFragment(TaskReviewFragment(task, distance, userExtra), true)
                         }
                     }
             }
         }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupBottomNavigation()
 
         if (savedInstanceState == null) {
+            Log.d("MainActivity", "Loading initial MapFragment")
             loadFragment(MapFragment())
         }
 
-
-    }
-
-    fun getDatabase() : FirebaseDatabase {
-        return database
+        // Seed data after UI is ready
+        DataSeeder.seedDataIfNeeded()
     }
 
     fun requireUser(): FirebaseUser {
-        val user = firebaseAuth.currentUser ?: throw Exception("User not logged in")
-        return user
+        return firebaseAuth.currentUser ?: throw Exception("User not logged in")
     }
 
     fun requestLocation() : Task<Location> {
-        val permGranted = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-        if (permGranted != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1001)
+        val finePerm = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        val coarsePerm = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        
+        if (finePerm != PackageManager.PERMISSION_GRANTED && coarsePerm != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1001)
+            return Tasks.forException(SecurityException("Location permission not granted"))
         }
         
         return fusedLocationClient.getCurrentLocation(
@@ -107,9 +107,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment, addToBackStack: Boolean = false) {
-        if (!addToBackStack) {
-            supportFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        }
         val transaction = supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
         

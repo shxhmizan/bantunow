@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/back"
+                android:text="Back"
                 android:textColor="@color/text_secondary"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -39,7 +39,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_tasks_title"
+            android:text="Task"
             android:textColor="?attr/colorOnBackground"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -54,7 +54,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/task_dashboard"
+                android:text="DASHBOARD"
                 android:textColor="#BF360C"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -67,15 +67,7 @@
                 app:tint="#BF360C" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/all_tasks_related"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
-
-        <!-- IN PROGRESS SECTION -->
+        <!-- POSTED TASKS SECTION -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,18 +82,49 @@
                 android:background="@drawable/bg_dot_orange" />
 
             <TextView
-                android:id="@+id/tv_in_progress_count"
+                android:id="@+id/tv_posted_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="IN PROGRESS (0)"
+                android:text="POSTED BY ME (0)"
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_jobs"
+            android:id="@+id/rv_posted"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- ACCEPTED TASKS SECTION -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/bg_chip_status_blue" />
+
+            <TextView
+                android:id="@+id/tv_accepted_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="ACCEPTED BY ME (0)"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_accepted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />

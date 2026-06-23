@@ -6,44 +6,40 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.credentials.CredentialManager
-import com.example.bantunow.data.model.UserExtra
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetCredentialResponse
+import androidx.credentials.exceptions.GetCredentialException
+import androidx.lifecycle.lifecycleScope
 import com.example.bantunow.databinding.ActivityRegisterBinding
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
-
-    private lateinit var databaseUrl:String
-
-    private lateinit var database: FirebaseDatabase
-
     private lateinit var firebaseAuth: FirebaseAuth
-
+    private lateinit var db: FirebaseFirestore
     private lateinit var credentialManager: CredentialManager
+    private lateinit var authWebClientId: String
 
     companion object {
-        /**
-         * Validate that the current user has their data stored in realtime database
-         * If the user is not in database,this method attempts to add the user
-         * into the database
-         * Note: The user data in realtime database is stored separately from user
-         * data in firebase authentication service
-         */
-        fun validateUserDBData(firebaseAuth: FirebaseAuth, database: FirebaseDatabase){
-            val user = firebaseAuth.currentUser ?: return
-            val dbRef = database.getReference(UserExtra.USER_DOCS_ROOT)
-            val userData = dbRef.child(user.uid)
-            userData.get().addOnSuccessListener {
-                    data ->
-                val dataExists = data.exists()
-                if(! dataExists){
-                    val userInitData = UserExtra(0, user.displayName)
-                    userData.setValue(userInitData).addOnCompleteListener {
-                            task -> if(! task.isSuccessful){
-                        Log.e("UserRegistration","Failed to save user data in database!")
-                    }
+        fun validateUserDBData() {
+            val user = FirebaseAuth.getInstance().currentUser ?: return
+            val db = FirebaseFirestore.getInstance()
+            val userRef = db.collection("users").document(user.uid)
+
+            userRef.get().addOnSuccessListener { document ->
+                if (!document.exists()) {
+                    val userInitData = mapOf(
+                        "displayName" to (user.displayName ?: "New User"),
+                        "bantuPoints" to 0L
+                    )
+                    userRef.set(userInitData).addOnFailureListener { e ->
+                        Log.e("UserRegistration", "Failed to save user in Firestore", e)
                     }
                 }
             }
@@ -52,65 +48,100 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        databaseUrl = BuildConfig.DATABASE_URL
-        database = FirebaseDatabase.getInstance(databaseUrl)
-        firebaseAuth = FirebaseAuth.getInstance()
-        credentialManager = CredentialManager.create(this)
-
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnRegister.setOnClickListener {
-            view ->
-            val name = binding.etName.text.toString()
-            val password = binding.etPassword.text.toString()
-            val email = binding.etEmail.text.toString()
+        firebaseAuth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+        credentialManager = CredentialManager.create(this)
+        authWebClientId = BuildConfig.AUTH_WEB_CLIENT_ID
 
-            //TODO: Improve form validation rules for user registration
-            if(name.isEmpty() || password.isEmpty() || email.isEmpty()){
-                Toast.makeText(this@RegisterActivity,"Please fill in all fields.",Toast.LENGTH_SHORT).show()
+        binding.btnRegister.setOnClickListener {
+            val name = binding.etName.text.toString()
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
+
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            registerUser(name,password,email)
+            registerWithEmail(name, email, password)
+        }
+
+        binding.btnGoogleRegister.setOnClickListener {
+            lifecycleScope.launch {
+                requestGoogleLogin()
+            }
+        }
+
+        binding.tvBackLogin.setOnClickListener {
+            finish()
         }
     }
 
-    private fun registerUser(name:String,password:String,email:String){
-        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {
-            task ->
-            if(task.isSuccessful){
-                val user = firebaseAuth.currentUser
-                val builder = UserProfileChangeRequest.Builder()
-                builder.displayName = name
-                val request = builder.build()
-                user?.updateProfile(request)?.addOnCompleteListener {
-                    onUserRegistration(task.isSuccessful)
+    private fun registerWithEmail(name: String, email: String, password: String) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    val profileUpdates = UserProfileChangeRequest.Builder()
+                        .setDisplayName(name)
+                        .build()
+
+                    user?.updateProfile(profileUpdates)?.addOnCompleteListener {
+                        onSuccess()
+                    }
+                } else {
+                    Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
-            else onUserRegistration(false)
+    }
+
+    private suspend fun requestGoogleLogin() {
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId(authWebClientId)
+            .setAutoSelectEnabled(false)
+            .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        try {
+            val result = credentialManager.getCredential(this, request)
+            loginWithGoogle(result)
+        } catch (e: GetCredentialException) {
+            Log.e("GoogleRegister", "Error: ${e.message}")
+            Toast.makeText(this, "Google Sign-Up failed: ${e.message}. Check if you're signed into Google on this device.", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Log.e("GoogleRegister", "Unexpected Error: ${e.message}")
+            Toast.makeText(this, "An unexpected error occurred.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun onUserRegistration(success:Boolean){
-        if (success){
-            Toast.makeText(
-                this@RegisterActivity,
-                "Registration successful, please proceed to login.",
-                Toast.LENGTH_SHORT)
-                .show()
-            validateUserDBData(firebaseAuth,database)
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        }
-        else {
-            Toast.makeText(
-                this@RegisterActivity,
-                "Sorry, registration failed.",
-                Toast.LENGTH_SHORT)
-                .show()
+    private fun loginWithGoogle(response: GetCredentialResponse) {
+        val credential = response.credential
+        if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+            val authCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
+
+            firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onSuccess()
+                } else {
+                    Toast.makeText(this, "Google sign-up failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
+    private fun onSuccess() {
+        validateUserDBData()
+        Toast.makeText(this, "Welcome to BantuNow!", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
 }

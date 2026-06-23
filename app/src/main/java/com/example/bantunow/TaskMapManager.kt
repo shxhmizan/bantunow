@@ -14,15 +14,18 @@ import com.example.bantunow.data.TaskMapResponse
 import com.example.bantunow.data.model.Task
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 /**
  * This class manages the application Task Map that displays tasks in an interactive map
- * It now interacts with Cloud Firestore
+ * It now interacts with Cloud Firestore with real-time updates
  */
 abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClient: FusedLocationProviderClient) : WebViewCompat.WebMessageListener {
     
+    private var tasksListener: ListenerRegistration? = null
+
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     @SuppressLint("RequiresFeature")
     override fun onPostMessage(
@@ -38,24 +41,37 @@ abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClie
             Log.i("TaskMapManager", "Request Type : ${request.type}")
             when (request.type) {
                 TaskMapRequest.Type.GET_NEARBY_TASKS -> {
-                    // Fetch from Firestore
-                    firestore.collection("tasks")
+                    // Remove old listener if any
+                    tasksListener?.remove()
+                    
+                    // Setup real-time listener for "open" tasks
+                    tasksListener = firestore.collection("tasks")
                         .whereEqualTo("status", "open")
-                        .get()
-                        .addOnSuccessListener { result ->
-                            val tasksMap = mutableMapOf<String, Task>()
-                            for (document in result) {
-                                val task = document.toObject(Task::class.java)
-                                tasksMap[document.id] = task
+                        .addSnapshotListener { snapshots, e ->
+                            if (e != null) {
+                                Log.w("TaskMapManager", "Listen failed.", e)
+                                return@addSnapshotListener
                             }
-                            
-                            val taskJson = Json.encodeToString(
-                                TaskMapResponse(
-                                    TaskMapResponse.Type.NEARBY_TASK_LIST,
-                                    tasksMap
+
+                            if (snapshots != null) {
+                                val tasksMap = mutableMapOf<String, Task>()
+                                for (document in snapshots) {
+                                    try {
+                                        val task = document.toObject(Task::class.java)
+                                        tasksMap[document.id] = task
+                                    } catch (err: Exception) {
+                                        Log.e("TaskMapManager", "Error parsing task document ${document.id}", err)
+                                    }
+                                }
+                                
+                                val taskJson = Json.encodeToString(
+                                    TaskMapResponse(
+                                        TaskMapResponse.Type.NEARBY_TASK_LIST,
+                                        tasksMap
+                                    )
                                 )
-                            )
-                            replyProxy.postMessage(taskJson)
+                                replyProxy.postMessage(taskJson)
+                            }
                         }
                 }
 
@@ -81,13 +97,18 @@ abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClie
 
                 TaskMapRequest.Type.GET_TASK_DETAILS -> {
                     val taskID = request.contents ?: return
+                    Log.d("TaskMapManager", "Fetching task details for ID: $taskID")
                     firestore.collection("tasks").document(taskID).get()
                         .addOnSuccessListener { document ->
-                            val task = document.toObject(Task::class.java)
-                            if (task != null) {
-                                // Important: We need to trigger the fragment navigation in Android
-                                // Not just send JSON back to JS
-                                onTaskSelected(task)
+                            if (document.exists()) {
+                                try {
+                                    val task = document.toObject(Task::class.java)
+                                    if (task != null) {
+                                        onTaskSelected(task)
+                                    }
+                                } catch (e: Exception) {
+                                    Log.e("TaskMapManager", "Error parsing task for ID: $taskID", e)
+                                }
                             }
                         }
                 }
