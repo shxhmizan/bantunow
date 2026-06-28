@@ -101,10 +101,11 @@ class LoginActivity : AppCompatActivity() {
     private fun onUserLogin(success: Boolean) {
         val user = firebaseAuth.currentUser
         if (success && user != null) {
-            RegisterActivity.validateUserDBData()
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            RegisterActivity.validateUserDBData {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
         } else {
             Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
         }

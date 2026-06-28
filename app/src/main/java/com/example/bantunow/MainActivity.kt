@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,7 +18,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +26,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var taskMapManager: TaskMapManager
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        ) {
+            Log.d("MainActivity", "Location permission granted")
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment is MapFragment) {
+                currentFragment.refreshLocation()
+            }
+        } else {
+            Log.w("MainActivity", "Location permission denied")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +56,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        
+        // Ensure user data is synced with Firestore
+        RegisterActivity.validateUserDBData()
+
+        requestPermissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
 
         val firestore = FirebaseFirestore.getInstance()
         taskMapManager = object : TaskMapManager(firestore, fusedLocationClient) {
@@ -51,19 +77,28 @@ class MainActivity : AppCompatActivity() {
                     .addOnSuccessListener { document ->
                         val userExtra = document.toObject(UserExtra::class.java)
                         
-                        fusedLocationClient.lastLocation.addOnCompleteListener { locationTask ->
-                            val location = locationTask.result
-                            val distance = if (location != null && task.latitude != null && task.longitude != null) {
-                                val taskLocation = Location("task")
-                                taskLocation.latitude = task.latitude!!
-                                taskLocation.longitude = task.longitude!!
-                                location.distanceTo(taskLocation).toDouble() / 1000.0 // in KM
-                            } else 0.0
-                            
-                            if(taskCreator == firebaseAuth.currentUser?.uid){
-                                loadFragment(TaskDetailsFragment(task, distance, userExtra), true)
+                        try {
+                            fusedLocationClient.lastLocation.addOnCompleteListener { locationTask ->
+                                val location = if (locationTask.isSuccessful) locationTask.result else null
+                                val distance = if (location != null && task.latitude != null && task.longitude != null) {
+                                    val taskLocation = Location("task")
+                                    taskLocation.latitude = task.latitude!!
+                                    taskLocation.longitude = task.longitude!!
+                                    location.distanceTo(taskLocation).toDouble() / 1000.0 // in KM
+                                } else 0.0
+                                
+                                val currentUserId = firebaseAuth.currentUser?.uid
+                                if(task.ownerID == currentUserId || task.workerID == currentUserId){
+                                    loadFragment(TaskDetailsFragment.newInstance(task, distance, userExtra), true)
+                                }
+                                else loadFragment(TaskReviewFragment(task, distance, userExtra), true)
                             }
-                            else loadFragment(TaskReviewFragment(task, distance, userExtra), true)
+                        } catch (e: SecurityException) {
+                            Log.e("MainActivity", "Permission denied for lastLocation", e)
+                            if(taskCreator == firebaseAuth.currentUser?.uid){
+                                loadFragment(TaskDetailsFragment.newInstance(task, 0.0, userExtra), true)
+                            }
+                            else loadFragment(TaskReviewFragment(task, 0.0, userExtra), true)
                         }
                     }
             }
@@ -80,11 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Seed data after UI is ready
-        DataSeeder.seedDataIfNeeded()
-    }
-
-    fun requireUser(): FirebaseUser {
-        return firebaseAuth.currentUser ?: throw Exception("User not logged in")
+        // DataSeeder.seedDataIfNeeded()
     }
 
     fun requestLocation() : Task<Location> {

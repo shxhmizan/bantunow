@@ -14,18 +14,19 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     <script>
-        const map = L.map('heatmap', { zoomControl: false }).setView([3.1390, 101.6869], 11);
+        const center = [4.1865, 101.2620];
+        const map = L.map('heatmap', { zoomControl: false }).setView(center, 12);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; CartoDB',
             maxZoom: 20
         }).addTo(map);
 
-        // Simulated heatmap data [lat, lng, intensity]
-        const heatData = [
-            [3.1390, 101.6869, 0.8], [3.1412, 101.6860, 0.9], [3.1350, 101.6900, 0.7],
-            [3.1500, 101.7100, 0.6], [3.1200, 101.6700, 0.5], [3.1600, 101.7000, 0.8],
-            [3.1450, 101.6950, 1.0], [3.1300, 101.6800, 0.4], [3.1550, 101.7200, 0.7]
-        ];
+        const heatData = [];
+        for(let i=0; i<30; i++){
+            const lat = center[0] + (Math.random() - 0.5) * 0.1;
+            const lng = center[1] + (Math.random() - 0.5) * 0.1;
+            heatData.push([lat, lng, Math.random()]);
+        }
 
         L.heatLayer(heatData, {
             radius: 25,

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_creamy_white"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_chevron_left"
+        app:tint="@color/text_charcoal" />
+
+    <TextView
+        style="@style/TextAppearance.BantuNow.Heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Withdraw Funds"
+        android:textSize="32sp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AMOUNT TO WITHDRAW"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary_grey" />
+
+            <EditText
+                android:id="@+id/et_amount"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_rounded"
+                android:hint="0.00"
+                android:inputType="numberDecimal"
+                android:paddingHorizontal="20dp"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="BANK ACCOUNT NUMBER"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary_grey" />
+
+            <EditText
+                android:id="@+id/et_account"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_rounded"
+                android:hint="164212345678"
+                android:inputType="number"
+                android:paddingHorizontal="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_withdraw"
+                style="@style/Widget.BantuNow.Button"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="32dp"
+                android:text="Withdraw Now" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

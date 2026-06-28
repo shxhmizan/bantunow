@@ -1,11 +1,16 @@
 package com.example.bantunow
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.bantunow.databinding.FragmentWorkFormBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +24,18 @@ class WorkFormFragment : Fragment() {
 
     private var latitude: Double? = null
     private var longitude: Double? = null
+    private var imageUri: Uri? = null
+
+    private val categories = listOf("General", "Cleaning", "Delivery", "Repair", "Pet Care", "Education")
+
+    private val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+        uri?.let {
+            imageUri = it
+            binding.ivTaskPreview.setImageURI(it)
+            binding.ivTaskPreview.visibility = View.VISIBLE
+            binding.llAddImagePlaceholder.visibility = View.GONE
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,12 +48,17 @@ class WorkFormFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        val activity = requireActivity() as MainActivity
         val db = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance()
 
+        setupSpinner()
+
         binding.layoutGetLocation.setOnClickListener {
             fetchCurrentLocation()
+        }
+
+        binding.layoutAddImage.setOnClickListener {
+            pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         binding.btnSubmitTask.setOnClickListener {
@@ -44,51 +66,70 @@ class WorkFormFragment : Fragment() {
             val desc = binding.etTaskDesc.text.toString().trim()
             val payString = binding.etTaskPay.text.toString().trim()
             val phone = binding.etTaskPhone.text.toString().trim()
-
-            Log.d("WorkForm", "Title: '$title', Desc: '$desc', Pay: '$payString', Phone: '$phone', Lat: $latitude")
+            val category = binding.spinnerCategory.selectedItem.toString()
 
             if (title.isEmpty() || desc.isEmpty() || payString.isEmpty() || phone.isEmpty() || latitude == null) {
-                val errorMsg = StringBuilder("Missing fields:")
-                if (title.isEmpty()) errorMsg.append(" Title")
-                if (desc.isEmpty()) errorMsg.append(" Description")
-                if (payString.isEmpty()) errorMsg.append(" Pay")
-                if (phone.isEmpty()) errorMsg.append(" Phone")
-                if (latitude == null) errorMsg.append(" Location")
-                
-                Toast.makeText(requireContext(), errorMsg.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill in all fields and set location", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val pay = payString.toDoubleOrNull() ?: 0.0
             val currentUserId = auth.currentUser?.uid ?: return@setOnClickListener
 
-            val taskData = mapOf(
-                "ownerID" to currentUserId,
-                "title" to title,
-                "desc" to desc,
-                "paymentAmount" to (pay * 100).toLong(), // stored in cents
-                "latitude" to latitude,
-                "longitude" to longitude,
-                "contactNo" to phone,
-                "status" to "open",
-                "createdAt" to com.google.firebase.Timestamp.now(),
-                "progressPercentage" to 0L,
-                "category" to "General"
-            )
+            // Check Wallet Balance
+            val userRef = db.collection("users").document(currentUserId)
+            userRef.get().addOnSuccessListener { doc ->
+                val balance = doc.getDouble("walletBalance") ?: 0.0
+                if (balance < pay) {
+                    Toast.makeText(requireContext(), "Insufficient wallet balance (RM $balance). Please top up first.", Toast.LENGTH_LONG).show()
+                } else {
+                    // Deduct, Post and Award Points
+                    db.runTransaction { transaction ->
+                        val currentBalance = doc.getDouble("walletBalance") ?: 0.0
+                        val currentPoints = doc.getLong("bantuPoints") ?: 0L
+                        
+                        transaction.update(userRef, "walletBalance", currentBalance - pay)
+                        transaction.update(userRef, "bantuPoints", currentPoints + 10L) // +10 for giving task
+                        
+                        // Record transaction for owner
+                        val transRef = db.collection("transactions").document()
+                        val transData = mapOf(
+                            "walletID" to currentUserId,
+                            "type" to "posted_task",
+                            "amount" to (pay * 100).toLong(),
+                            "status" to "completed",
+                            "timestamp" to com.google.firebase.Timestamp.now(),
+                            "description" to "Deduction for posting: $title"
+                        )
+                        transaction.set(transRef, transData)
 
-            db.collection("tasks").add(taskData)
-                .addOnSuccessListener {
-                    if (isAdded) {
-                        Toast.makeText(requireContext(), "Task posted successfully!", Toast.LENGTH_LONG).show()
+                        val newTaskRef = db.collection("tasks").document()
+                        val taskData = mutableMapOf<String, Any>(
+                            "ownerID" to currentUserId,
+                            "title" to title,
+                            "desc" to desc,
+                            "paymentAmount" to (pay * 100).toLong(),
+                            "latitude" to (latitude ?: 0.0),
+                            "longitude" to (longitude ?: 0.0),
+                            "contactNo" to phone,
+                            "status" to "open",
+                            "createdAt" to com.google.firebase.Timestamp.now(),
+                            "progressPercentage" to 0L,
+                            "category" to category
+                        )
+                        if (imageUri != null) {
+                            taskData["imageUrl"] = imageUri.toString()
+                        }
+                        transaction.set(newTaskRef, taskData)
+                    }.addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Task posted! RM $pay deducted from wallet.", Toast.LENGTH_LONG).show()
                         parentFragmentManager.popBackStack()
-                    }
-                }
-                .addOnFailureListener { e ->
-                    if (isAdded) {
-                        Log.e("WorkForm", "Error adding task", e)
+                    }.addOnFailureListener { e ->
+                        Log.e("WorkForm", "Transaction failed", e)
                         Toast.makeText(requireContext(), "Failed to post task", Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
         }
         
         binding.btnBack.setOnClickListener {
@@ -96,15 +137,34 @@ class WorkFormFragment : Fragment() {
         }
     }
 
+    private fun setupSpinner() {
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerCategory.adapter = adapter
+    }
+
     private fun fetchCurrentLocation() {
-        // Automatically use the requested coordinate: 4.183993, 101.218559
+        val activity = requireActivity()
+        if (activity is MainActivity) {
+            activity.requestLocation().addOnSuccessListener { location ->
+                latitude = location.latitude
+                longitude = location.longitude
+                binding.tvLocationLabel.text = String.format(Locale.US, "Coordinate: %.6f, %.6f", latitude, longitude)
+                binding.ivLocationCheck.visibility = View.VISIBLE
+                binding.layoutGetLocation.setBackgroundResource(R.drawable.bg_input_rounded)
+            }.addOnFailureListener {
+                useDefaultLocation()
+            }
+        } else {
+            useDefaultLocation()
+        }
+    }
+
+    private fun useDefaultLocation() {
         latitude = 4.183993
         longitude = 101.218559
-        
-        binding.tvLocationLabel.text = String.format(Locale.US, "Coordinate: %.6f, %.6f", latitude, longitude)
+        binding.tvLocationLabel.text = String.format(Locale.US, "Default: %.6f, %.6f", latitude, longitude)
         binding.ivLocationCheck.visibility = View.VISIBLE
-        binding.layoutGetLocation.setBackgroundResource(R.drawable.bg_input_rounded)
-        Toast.makeText(requireContext(), "Location retrieved!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

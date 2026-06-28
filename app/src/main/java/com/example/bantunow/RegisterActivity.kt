@@ -27,21 +27,37 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var authWebClientId: String
 
     companion object {
-        fun validateUserDBData() {
-            val user = FirebaseAuth.getInstance().currentUser ?: return
+        fun validateUserDBData(onComplete: (() -> Unit)? = null) {
+            val user = FirebaseAuth.getInstance().currentUser ?: run {
+                onComplete?.invoke()
+                return
+            }
             val db = FirebaseFirestore.getInstance()
             val userRef = db.collection("users").document(user.uid)
 
             userRef.get().addOnSuccessListener { document ->
                 if (!document.exists()) {
-                    val userInitData = mapOf(
+                    val userInitData = mutableMapOf(
                         "displayName" to (user.displayName ?: "New User"),
-                        "bantuPoints" to 0L
+                        "bantuPoints" to 0L,
+                        "walletBalance" to 100.0, // Give some starting balance for testing
+                        "rating" to 5.0,
+                        "profileImageUrl" to (user.photoUrl?.toString() ?: "")
                     )
-                    userRef.set(userInitData).addOnFailureListener { e ->
-                        Log.e("UserRegistration", "Failed to save user in Firestore", e)
+                    userRef.set(userInitData).addOnCompleteListener {
+                        onComplete?.invoke()
                     }
+                } else {
+                    // Update profile image if it exists in auth but not in DB
+                    val dbImageUrl = document.getString("profileImageUrl")
+                    val authImageUrl = user.photoUrl?.toString()
+                    if (dbImageUrl.isNullOrEmpty() && !authImageUrl.isNullOrEmpty()) {
+                        userRef.update("profileImageUrl", authImageUrl)
+                    }
+                    onComplete?.invoke()
                 }
+            }.addOnFailureListener {
+                onComplete?.invoke()
             }
         }
     }
@@ -138,10 +154,11 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun onSuccess() {
-        validateUserDBData()
-        Toast.makeText(this, "Welcome to BantuNow!", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        validateUserDBData {
+            Toast.makeText(this, "Welcome to BantuNow!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
     }
 }

@@ -58,7 +58,11 @@ class JobHistoryFragment : Fragment() {
             .setMessage("Are you sure you want to delete '$jobTitle' from your history?")
             .setPositiveButton("Delete") { _, _ ->
                 view.visibility = View.GONE
-                Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
+                if (isAdded) {
+                    activity?.applicationContext?.let {
+                        Toast.makeText(it, "Item deleted", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
             .setNegativeButton("Cancel", null)
             .show()

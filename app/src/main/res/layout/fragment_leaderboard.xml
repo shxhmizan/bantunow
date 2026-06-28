@@ -1,75 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="?android:attr/colorBackground">
+    android:background="@color/bg_creamy_white">
 
-    <LinearLayout
-        android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_chevron_right"
-            android:rotation="180"
-            app:tint="@color/text_secondary" />
-        <TextView
-            android:layout_width="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="@string/back"
-            android:textColor="@color/text_secondary"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_chevron_left"
+                app:tint="@color/text_charcoal" />
+
+            <TextView
+                style="@style/TextAppearance.BantuNow.Heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Bantu Elite"
+                android:textSize="36sp"
+                android:textColor="@color/brand_dark" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recognizing our top contributors"
+                android:textColor="@color/text_secondary_grey"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
-            android:paddingBottom="24dp">
+            android:paddingBottom="120dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/leaderboard_title"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@color/primary_neon"/>
-
+            <!-- Premium Leaderboard List -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvLeaderboard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:nestedScrollingEnabled="false" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/heatmap_desc"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnBackground"/>
+                android:layout_marginTop="48dp"
+                android:text="Community Pulse"
+                style="@style/TextAppearance.BantuNow.Heading"
+                android:textSize="22sp"
+                android:textColor="@color/brand_dark" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white"
                 app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutlineVariant">
+                app:strokeColor="@color/ui_light_grey">
                 <WebView
                     android:id="@+id/heatmap_webview"
                     android:layout_width="match_parent"
@@ -78,4 +88,5 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

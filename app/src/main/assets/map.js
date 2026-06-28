@@ -1,8 +1,8 @@
 let map;
 const markers = {};
-let userCircle;
 let userMarker;
-let userCoords = { lat: 4.1865, lng: 101.2620 };
+let userCoords = { lat: 4.5921, lng: 101.0901 }; // Default to Perak/Ipoh
+let currentFilters = { radius: 1000, category: "All" }; // Show everything by default
 
 class TaskMapRequest {
     constructor(type, contents) {
@@ -38,30 +38,61 @@ if (mapListenerExists) {
                 let nearbyCount = 0;
                 let totalIncome = 0;
                 const categories = {};
+                const taskTitles = [];
+
+                const occupiedPositions = {};
 
                 for (const [id, task] of Object.entries(contents)) {
-                    // Safety check for coordinates
-                    if (task.latitude == null || task.longitude == null) {
-                        console.warn("Skipping task with missing coordinates: " + id);
-                        continue;
-                    }
+                    if (task.latitude == null || task.longitude == null) continue;
 
-                    const dist = calculateDistance(userCoords.lat, userCoords.lng, task.latitude, task.longitude);
+                    // Count all active work (open, in_progress, ongoing, done_by_worker)
+                    const isActive = task.status !== "completed";
 
-                    if (dist <= 10) {
+                    if (isActive) {
                         nearbyCount++;
                         totalIncome += ((task.paymentAmount || 0) / 100);
                         const cat = task.category || "General";
                         categories[cat] = (categories[cat] || 0) + 1;
+                        taskTitles.push(task.title);
                     }
 
-                    addJobMarker(id, task.latitude, task.longitude, task.title, task.paymentAmount, task.desc, dist);
+                    // Only show markers for tasks that are actually "open" or "in_progress"
+                    // to avoid clutter, but "show all" can mean all active ones.
+                    if (task.status === "completed") continue;
+
+                    let finalLat = task.latitude;
+                    let finalLng = task.longitude;
+
+                    const posKey = finalLat.toFixed(5) + "," + finalLng.toFixed(5);
+                    if (occupiedPositions[posKey]) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const radius = 0.00015;
+                        finalLat += Math.cos(angle) * radius;
+                        finalLng += Math.sin(angle) * radius;
+                    }
+                    occupiedPositions[posKey] = true;
+
+                    const dist = calculateDistance(userCoords.lat, userCoords.lng, finalLat, finalLng);
+                    const cat = task.category || "General";
+
+                    // Apply filters
+                    const matchesRadius = dist <= currentFilters.radius;
+                    const matchesCategory = currentFilters.category === "All" || cat === currentFilters.category;
+
+                    if (matchesRadius && matchesCategory) {
+                        addJobMarker(id, finalLat, finalLng, task.title, task.paymentAmount, task.desc, dist, task.status);
+                    }
                 }
 
-                const avgIncome = nearbyCount > 0 ? (totalIncome / nearbyCount).toFixed(0) : 0;
-                const popular = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b, "-");
+                const avgIncome = nearbyCount > 0 ? (totalIncome / nearbyCount).toFixed(0) : "0";
+                const popular = Object.keys(categories).length > 0 ? Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b) : "-";
 
-                console.log("INSIGHTS:" + JSON.stringify({count: nearbyCount, avg: avgIncome, pop: popular}));
+                console.log("INSIGHTS:" + JSON.stringify({
+                    count: nearbyCount,
+                    avg: avgIncome,
+                    pop: popular,
+                    rawTasks: taskTitles.join(", ")
+                }));
 
             } else if (type === TaskMapResponse.CURRENT_LOCATION) {
                 userCoords.lat = contents.latitude;
@@ -72,6 +103,14 @@ if (mapListenerExists) {
             console.error("Error in onmessage:", ex);
         }
     };
+}
+
+function setFilters(radius, category) {
+    currentFilters.radius = parseFloat(radius);
+    currentFilters.category = category;
+    if (mapListenerExists) {
+        appWebMsgListener.postMessage(JSON.stringify(new TaskMapRequest(TaskMapRequest.GET_NEARBY_TASKS, null)));
+    }
 }
 
 function clearMarkers() {
@@ -85,7 +124,7 @@ function initMap() {
     map = L.map('leaflet-map', {
         zoomControl: true,
         scrollWheelZoom: true
-    }).setView([userCoords.lat, userCoords.lng], 15);
+    }).setView([userCoords.lat, userCoords.lng], 14);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; OpenStreetMap & CartoDB',
@@ -100,34 +139,44 @@ function initMap() {
     }
 }
 
+function requestLocationRefresh() {
+    if (mapListenerExists) {
+        appWebMsgListener.postMessage(JSON.stringify(new TaskMapRequest(TaskMapRequest.GET_CURRENT_LOCATION, null)));
+    }
+}
+
 const neonIcon = L.divIcon({
     className: 'custom-div-icon',
-    html: `<div style="background-color: #00FF66; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,255,102,0.5); display: flex; align-items: center; justify-content: center;">
-             <img src="https://img.icons8.com/material-rounded/24/ffffff/briefcase.png" style="width: 16px; height: 16px;"/>
+    html: `<div class="marker-pulse"></div>
+           <div class="marker-pin">
+             <img src="https://img.icons8.com/material-rounded/24/ffffff/briefcase.png"/>
            </div>`,
-    iconSize: [30, 30],
-    iconAnchor: [15, 15]
+    iconSize: [34, 34],
+    iconAnchor: [17, 34]
 });
 
-function addJobMarker(id, lat, lng, title, payCents, desc, dist) {
+function addJobMarker(id, lat, lng, title, payCents, desc, dist, status) {
     const payFormatted = ((payCents || 0) / 100).toFixed(0);
+    const statusText = (status || "open").toUpperCase().replace("_", " ");
+    const statusColor = status === "open" ? "#EAEAEA" : "#C4E4E1";
+
     const popupContent = `
-        <div class="popup-container" style="min-width: 250px; font-family: sans-serif; padding: 10px;">
+        <div class="popup-container" style="min-width: 250px; font-family: 'Google Sans', sans-serif; padding: 10px;">
             <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                <span style="background: #E8F5E9; color: #4CAF50; padding: 4px 12px; border-radius: 8px; font-size: 10px; font-weight: bold; border: 1px solid #C8E6C9;">OPEN</span>
+                <span style="background: ${statusColor}; color: #1C1C1C; padding: 4px 12px; border-radius: 8px; font-size: 10px; font-weight: bold; border: 1px solid #EAEAEA;">${statusText}</span>
             </div>
-            <div style="font-size: 18px; font-weight: 800; color: #212121; margin-bottom: 4px;">${title}</div>
+            <div style="font-size: 20px; font-weight: 800; color: #1C1C1C; margin-bottom: 4px; font-family: 'Playfair Display', serif;">${title}</div>
             <div style="font-size: 14px; color: #757575; margin-bottom: 20px;">${desc || 'No description provided'}</div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <div style="font-size: 24px; font-weight: 900; color: #FF7043;">RM ${payFormatted}</div>
-                <div style="background: #F5F5F5; padding: 6px 12px; border-radius: 20px; font-size: 12px; color: #757575; display: flex; align-items: center; gap: 4px;">
+                <div style="font-size: 24px; font-weight: 900; color: #5d3d3a; font-family: 'Playfair Display', serif;">RM ${payFormatted}</div>
+                <div style="background: #F5F2EB; padding: 6px 12px; border-radius: 20px; font-size: 12px; color: #1C1C1C; display: flex; align-items: center; gap: 4px;">
                    <span>📍</span> ${dist.toFixed(1)} km
                 </div>
             </div>
 
             <a href="javascript:void(0);" onclick="onMarkerClick('${id}')"
-               style="display: block; background: #2E7D32; color: white; text-align: center; padding: 14px; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 15px; box-shadow: 0 4px 12px rgba(46,125,50,0.2);">
+               style="display: block; background: #C4E4E1; color: #1C1C1C; text-align: center; padding: 14px; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 15px; box-shadow: 0 4px 12px rgba(196,228,225,0.2);">
                REVIEW AND ACCEPT
             </a>
         </div>
@@ -152,16 +201,7 @@ function onMarkerClick(jobId) {
 function centerOnLocation(lat, lng) {
     map.setView([lat, lng], 14);
 
-    if (userCircle) map.removeLayer(userCircle);
     if (userMarker) map.removeLayer(userMarker);
-
-    userCircle = L.circle([lat, lng], {
-        color: '#4CAF50',
-        fillColor: '#4CAF50',
-        fillOpacity: 0.1,
-        radius: 2000,
-        weight: 1
-    }).addTo(map);
 
     userMarker = L.circleMarker([lat, lng], {
         radius: 7,

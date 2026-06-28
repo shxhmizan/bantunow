@@ -3,131 +3,103 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:background="@color/bg_light_grey"
+    android:scrollbars="none">
 
     <LinearLayout
         android:id="@+id/ll_main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:paddingTop="48dp"
-        android:paddingBottom="86dp">
+        android:paddingHorizontal="24dp"
+        android:paddingTop="60dp"
+        android:paddingBottom="120dp">
 
-        <LinearLayout
-            android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_chevron_right"
-                android:rotation="180"
-                app:tint="@color/text_secondary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="Back"
-                android:textColor="@color/text_secondary"
-                android:textStyle="bold" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_chevron_left"
+            android:layout_marginStart="-12dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/back"
+            app:tint="@color/text_charcoal" />
 
         <TextView
+            style="@style/TextAppearance.BantuNow.Heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Task"
-            android:textColor="?attr/colorOnBackground"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:text="Task Dashboard"
+            android:textSize="32sp" />
 
-        <LinearLayout
+        <TextView
+            style="@style/TextAppearance.BantuNow.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DASHBOARD"
-                android:textColor="#BF360C"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_clipboard"
-                app:tint="#BF360C" />
-        </LinearLayout>
+            android:text="Track your activities and contributions"
+            android:textColor="@color/text_secondary_grey"
+            android:layout_marginTop="4dp" />
 
         <!-- POSTED TASKS SECTION -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_posted_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="40dp"
             android:layout_marginBottom="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:background="@drawable/bg_dot_orange" />
-
-            <TextView
-                android:id="@+id/tv_posted_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="POSTED BY ME (0)"
-                android:textColor="?attr/colorOnBackground"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:text="@string/posted_by_me"
+            android:textColor="@color/accent_teal"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.1" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_posted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <!-- ACCEPTED TASKS SECTION -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_accepted_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="40dp"
             android:layout_marginBottom="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:background="@drawable/bg_chip_status_blue" />
-
-            <TextView
-                android:id="@+id/tv_accepted_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="ACCEPTED BY ME (0)"
-                android:textColor="?attr/colorOnBackground"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:text="@string/accepted_by_me"
+            android:textColor="@color/text_charcoal"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.1" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_accepted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <!-- HISTORY SECTION -->
+        <TextView
+            android:id="@+id/tv_history_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/history"
+            android:textColor="@color/accent_coral_faded"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.1" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
 </ScrollView>

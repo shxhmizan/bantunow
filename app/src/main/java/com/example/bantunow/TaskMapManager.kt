@@ -44,9 +44,8 @@ abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClie
                     // Remove old listener if any
                     tasksListener?.remove()
                     
-                    // Setup real-time listener for "open" tasks
+                    // Setup real-time listener for ALL tasks
                     tasksListener = firestore.collection("tasks")
-                        .whereEqualTo("status", "open")
                         .addSnapshotListener { snapshots, e ->
                             if (e != null) {
                                 Log.w("TaskMapManager", "Listen failed.", e)
@@ -58,7 +57,10 @@ abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClie
                                 for (document in snapshots) {
                                     try {
                                         val task = document.toObject(Task::class.java)
-                                        tasksMap[document.id] = task
+                                        if (task != null) {
+                                            task.taskId = document.id
+                                            tasksMap[document.id] = task
+                                        }
                                     } catch (err: Exception) {
                                         Log.e("TaskMapManager", "Error parsing task document ${document.id}", err)
                                     }
@@ -70,29 +72,38 @@ abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClie
                                         tasksMap
                                     )
                                 )
-                                replyProxy.postMessage(taskJson)
+                                Log.d("TaskMapManager", "Posting ${tasksMap.size} tasks to JS")
+                                try {
+                                    replyProxy.postMessage(taskJson)
+                                } catch (e: Exception) {
+                                    Log.e("TaskMapManager", "Error posting message to JS", e)
+                                }
                             }
                         }
                 }
 
                 TaskMapRequest.Type.GET_CURRENT_LOCATION -> {
-                    locationClient.getCurrentLocation(com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY, null)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful && task.result != null) {
-                                val location = task.result
-                                replyProxy.postMessage(
-                                    Json.encodeToString(
-                                        TaskMapResponse(
-                                            TaskMapResponse.Type.CURRENT_LOCATION,
-                                            TaskMapResponse.Location(
-                                                latitude = location.latitude,
-                                                longitude = location.longitude
+                    try {
+                        locationClient.getCurrentLocation(com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY, null)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful && task.result != null) {
+                                    val location = task.result
+                                    replyProxy.postMessage(
+                                        Json.encodeToString(
+                                            TaskMapResponse(
+                                                TaskMapResponse.Type.CURRENT_LOCATION,
+                                                TaskMapResponse.Location(
+                                                    latitude = location.latitude,
+                                                    longitude = location.longitude
+                                                )
                                             )
                                         )
                                     )
-                                )
+                                }
                             }
-                        }
+                    } catch (e: SecurityException) {
+                        Log.e("TaskMapManager", "Permission denied for getCurrentLocation", e)
+                    }
                 }
 
                 TaskMapRequest.Type.GET_TASK_DETAILS -> {
@@ -104,6 +115,7 @@ abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClie
                                 try {
                                     val task = document.toObject(Task::class.java)
                                     if (task != null) {
+                                        task.taskId = document.id
                                         onTaskSelected(task)
                                     }
                                 } catch (e: Exception) {

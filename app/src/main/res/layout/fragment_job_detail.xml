@@ -3,14 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground">
+    android:background="@color/bg_creamy_white"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp"
-        android:paddingTop="48dp">
+        android:paddingTop="48dp"
+        android:paddingBottom="100dp">
 
         <LinearLayout
             android:id="@+id/btn_back"
@@ -23,75 +25,129 @@
                 android:layout_height="20dp"
                 android:src="@drawable/ic_chevron_right"
                 android:rotation="180"
-                app:tint="@color/text_secondary" />
+                app:tint="@color/text_charcoal" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="Kembali"
-                android:textColor="@color/text_secondary"
+                android:text="Back"
+                android:textColor="@color/text_charcoal"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PROGRES TUGASAN"
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/tvProgressPercent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="70%"
-                android:textColor="?attr/colorOnBackground"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <ProgressBar
-            android:id="@+id/progressBarTask"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:layout_marginTop="8dp"
-            android:progress="70"
-            android:progressDrawable="@drawable/progress_bar_orange" />
-
+        <!-- Workflow Indicator -->
         <LinearLayout
+            android:id="@+id/ll_workflow_indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="TERBUKA"
-                android:textColor="#FF7043"
-                android:textSize="9sp"
-                android:textStyle="bold" />
-            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
-            <TextView
-                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <View
+                    android:id="@+id/v_step1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_circle_filled"
+                    android:backgroundTint="@color/accent_teal" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Posted"
+                    android:textSize="10sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/v_line1"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="0.1"
+                android:layout_marginTop="10dp"
+                android:background="@color/ui_light_grey" />
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="BERJALAN"
-                android:textColor="#FF7043"
-                android:textSize="9sp"
-                android:textStyle="bold" />
-            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
-            <TextView
-                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <View
+                    android:id="@+id/v_step2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_circle_filled"
+                    android:backgroundTint="@color/ui_light_grey" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accepted"
+                    android:textSize="10sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/v_line2"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="0.1"
+                android:layout_marginTop="10dp"
+                android:background="@color/ui_light_grey" />
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="SELESAI"
-                android:textColor="@color/text_secondary"
-                android:textSize="9sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <View
+                    android:id="@+id/v_step3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_circle_filled"
+                    android:backgroundTint="@color/ui_light_grey" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Done"
+                    android:textSize="10sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/v_line3"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="0.1"
+                android:layout_marginTop="10dp"
+                android:background="@color/ui_light_grey" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <View
+                    android:id="@+id/v_step4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_circle_filled"
+                    android:backgroundTint="@color/ui_light_grey" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Paid"
+                    android:textSize="10sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -100,52 +156,71 @@
             android:layout_marginTop="24dp"
             android:orientation="horizontal">
             <TextView
+                android:id="@+id/tvStatusBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_status_orange"
-                android:paddingHorizontal="8dp"
+                android:background="@drawable/bg_input_rounded"
+                android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="SEDANG BERJALAN"
-                android:textColor="#E65100"
+                android:text="ONGOING"
+                android:textColor="@color/accent_coral_faded"
                 android:textSize="10sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                app:backgroundTint="@color/ui_light_grey" />
             <TextView
                 android:id="@+id/tvRoleBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/bg_chip_status_blue"
-                android:paddingHorizontal="8dp"
+                android:background="@drawable/bg_input_rounded"
+                android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="ANDA PELAKSANA"
-                android:textColor="#1A237E"
+                android:text="YOU ARE DOER"
+                android:textColor="@color/text_charcoal"
                 android:textSize="10sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                app:backgroundTint="@color/ui_light_grey" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tvTaskTitle"
+            style="@style/TextAppearance.BantuNow.Heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Wiring Lampu Taman"
-            android:textColor="?attr/colorOnBackground"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:text="Task Title"
+            android:textSize="32sp" />
 
         <TextView
             android:id="@+id/tvTaskDesc"
+            style="@style/TextAppearance.BantuNow.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Nak pasang kipas siling baru, ceiling dah siap drilling."
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
+            android:text="Task description goes here."
+            android:textColor="@color/text_secondary_grey"
+            android:textSize="15sp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardTaskImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
+            <ImageView
+                android:id="@+id/ivTaskImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+        </com.google.android.material.card.MaterialCardView>
 
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:columnCount="2"
             android:rowCount="2">
 
@@ -155,9 +230,11 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#FFF8E1">
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/ui_light_grey"
+                app:cardBackgroundColor="@color/surface_white">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -166,16 +243,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="GAJI"
-                        android:textColor="@color/text_secondary"
+                        android:text="PAYMENT"
+                        android:textColor="@color/text_secondary_grey"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="sans-serif-black" />
                     <TextView
                         android:id="@+id/tvTaskPay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="RM 69"
-                        android:textColor="#BF360C"
+                        android:text="RM 0"
+                        android:textColor="@color/accent_coral_faded"
                         android:textSize="24sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -187,9 +264,11 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#E0F2F1">
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/ui_light_grey"
+                app:cardBackgroundColor="@color/surface_white">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -198,18 +277,35 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PEMILIK"
-                        android:textColor="@color/text_secondary"
+                        android:text="ASSIGNER"
+                        android:textColor="@color/text_secondary_grey"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/tvTaskOwner"
-                        android:layout_width="wrap_content"
+                        android:fontFamily="sans-serif-black" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Nurul Huda"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp">
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_owner_avatar"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_user"
+                            app:shapeAppearanceOverlay="@style/CircleImage"
+                            app:strokeWidth="0dp" />
+                        <TextView
+                            android:id="@+id/tvTaskOwner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Unknown"
+                            android:textColor="@color/text_charcoal"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:ellipsize="end"
+                            android:maxLines="1" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -219,9 +315,11 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#F5F5F5">
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/ui_light_grey"
+                app:cardBackgroundColor="@color/surface_white">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -230,10 +328,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TELEFON"
-                        android:textColor="@color/text_secondary"
+                        android:text="PHONE"
+                        android:textColor="@color/text_secondary_grey"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="sans-serif-black" />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -243,14 +341,14 @@
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:src="@drawable/ic_phone"
-                            app:tint="#4CAF50" />
+                            app:tint="@color/accent_teal" />
                         <TextView
                             android:id="@+id/tvTaskPhoneNo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:text="014-155 9831"
-                            android:textColor="?attr/colorOnSurface"
+                            android:text="-"
+                            android:textColor="@color/text_charcoal"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -263,9 +361,11 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#E8EAF6">
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/ui_light_grey"
+                app:cardBackgroundColor="@color/surface_white">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -274,10 +374,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="JARAK"
-                        android:textColor="@color/text_secondary"
+                        android:text="DISTANCE"
+                        android:textColor="@color/text_secondary_grey"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="sans-serif-black" />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -287,14 +387,14 @@
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:src="@drawable/ic_location"
-                            app:tint="#3F51B5" />
+                            app:tint="@color/accent_teal" />
                         <TextView
                             android:id="@+id/tvTaskDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:text="140.4 km dari anda"
-                            android:textColor="#3F51B5"
+                            android:text="0 km away"
+                            android:textColor="@color/text_charcoal"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -305,66 +405,49 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:orientation="horizontal"
             android:weightSum="2">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCall"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="54dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="#00C853"
                 android:text="Call"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/text_charcoal"
                 app:cornerRadius="16dp"
+                app:backgroundTint="@color/ui_light_grey"
                 app:icon="@drawable/ic_phone"
-                app:iconTint="@color/white" />
+                app:iconTint="@color/text_charcoal" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWhatsapp"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="54dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="#26D366"
                 android:text="WhatsApp"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/text_charcoal"
                 app:cornerRadius="16dp"
+                app:backgroundTint="@color/ui_light_grey"
                 app:icon="@drawable/ic_send"
-                app:iconTint="@color/white" />
+                app:iconTint="@color/text_charcoal" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnComplete"
+            style="@style/Widget.BantuNow.Button"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:layout_marginTop="16dp"
-            android:backgroundTint="#00C853"
-            android:text="KERJA SELESAI"
-            android:textColor="@color/white"
-            android:textSize="16sp"
+            android:text="JOB DONE"
+            android:textSize="17sp"
             android:textStyle="bold"
-            app:cornerRadius="16dp"
             app:icon="@drawable/ic_list"
             app:iconGravity="textStart"
-            app:iconPadding="8dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnBackToMap"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#212121"
-            android:text="Kembali ke Peta"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:cornerRadius="16dp"
-            app:icon="@drawable/ic_map"
-            app:iconGravity="textStart"
-            app:iconPadding="8dp" />
+            app:iconPadding="12dp" />
 
     </LinearLayout>
 </ScrollView>

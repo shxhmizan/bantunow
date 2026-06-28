@@ -3,27 +3,38 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Primary Branding -->
-    <color name="bg_dark_forest">#0B1612</color>
-    <color name="surface_pine">#15241C</color>
-    <color name="primary_neon">#00FF66</color>
-    <color name="primary_dark">#00CC52</color>
+    <!-- BantuNow Palette -->
+    <color name="bg_creamy_white">#F5F2EB</color>
+    <color name="surface_white">#FFFFFF</color>
+    <color name="accent_teal">#C4E4E1</color>
+    <color name="brand_dark">#5d3d3a</color>
+    <color name="brand_terracotta">#c15f3c</color>
+    <color name="accent_coral_faded">#EF9A9A</color> <!-- Soft Red -->
+    <color name="text_charcoal">#1C1C1C</color>
+    <color name="ui_light_grey">#EAEAEA</color>
 
-    <!-- UI Elements -->
-    <color name="border_mint">#2A4D3E</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#A3B5AA</color>
-    <color name="danger">#FF4444</color>
+    <!-- UI Helpers -->
+    <color name="shadow_diffuse">#1A000000</color>
+    <color name="glass_white_80">#CCFFFFFF</color>
+    <color name="glass_white_50">#80FFFFFF</color>
 
-    <!-- Glassmorphism / Overlay -->
-    <color name="glass_white_10">#1AFFFFFF</color>
-    <color name="glass_white_20">#33FFFFFF</color>
-    <color name="overlay_dark_80">#CC0B1612</color>
+    <!-- Compatibility Mappings -->
+    <color name="bg_light_grey">@color/bg_creamy_white</color>
+    <color name="text_secondary_grey">#757575</color>
+    <color name="accent_coral">@color/brand_terracotta</color>
+    <color name="accent_coral_variant">#a85234</color> <!-- Darker terracotta -->
 
-    <!-- Light Mode palette (Keeping for system reference but shifting defaults) -->
-    <color name="light_bg">#F5F7F6</color>
-    <color name="light_surface">#FFFFFF</color>
-    <color name="light_text_primary">#1A1A1A</color>
-    <color name="light_text_secondary">#666666</color>
-    <color name="light_border">#D1D1D1</color>
+    <color name="bg_dark_forest">@color/bg_creamy_white</color>
+    <color name="surface_pine">@color/surface_white</color>
+    <color name="primary_neon">@color/accent_teal</color>
+    <color name="primary_dark">@color/accent_teal</color>
+    <color name="border_mint">@color/ui_light_grey</color>
+    <color name="border_soft">@color/ui_light_grey</color>
+    <color name="text_primary">@color/text_charcoal</color>
+    <color name="text_secondary">@color/text_secondary_grey</color>
+
+    <!-- Leaderboard Medals -->
+    <color name="medal_gold">#FFD700</color>
+    <color name="medal_silver">#C0C0C0</color>
+    <color name="medal_bronze">#CD7F32</color>
 </resources>

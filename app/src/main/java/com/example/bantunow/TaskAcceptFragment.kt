@@ -41,6 +41,15 @@ class TaskAcceptFragment(val task: Task, val distance: Double, val userExtra: Us
         binding.tvTaskPay.text = "RM ${(task.paymentAmount?.toDouble()?.div(100) ?: 0.0).toInt()}"
         binding.tvLocationCoords.text = "${String.format("%.4f", task.latitude)}, ${String.format("%.4f", task.longitude)}"
 
+        if (!task.imageUrl.isNullOrEmpty()) {
+            binding.cardTaskImage.visibility = View.VISIBLE
+            try {
+                binding.ivTaskImage.setImageURI(android.net.Uri.parse(task.imageUrl))
+            } catch (e: SecurityException) {
+                binding.cardTaskImage.visibility = View.GONE
+            }
+        }
+
         binding.btnAccept.setOnClickListener {
             acceptTask()
         }
@@ -58,23 +67,29 @@ class TaskAcceptFragment(val task: Task, val distance: Double, val userExtra: Us
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
                     val docId = documents.documents[0].id
-                    db.collection("tasks").document(docId)
-                        .update(
-                            "status", "in_progress",
-                            "workerID", currentUserId
-                        )
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "Task accepted!", Toast.LENGTH_SHORT).show()
-                            // Navigate to details/summary
-                            val fragment = TaskDetailsFragment(task, distance, userExtra)
-                            parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container, fragment)
-                                .addToBackStack(null)
-                                .commit()
-                        }
-                        .addOnFailureListener { e ->
-                            Log.e("AcceptTask", "Error updating task", e)
-                        }
+                    
+                    db.runTransaction { transaction ->
+                        val taskRef = db.collection("tasks").document(docId)
+                        val userRef = db.collection("users").document(currentUserId)
+                        val userDoc = transaction.get(userRef)
+                        val currentPoints = userDoc.getLong("bantuPoints") ?: 0L
+                        
+                        transaction.update(taskRef, "status", "in_progress")
+                        transaction.update(taskRef, "workerID", currentUserId)
+                        transaction.update(userRef, "bantuPoints", currentPoints + 5L) // +5 for accepting
+                    }
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Task accepted! +5 pts", Toast.LENGTH_SHORT).show()
+                        // Navigate to details/summary
+                        val fragment = TaskDetailsFragment.newInstance(task, distance, userExtra)
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("AcceptTask", "Error updating task", e)
+                    }
                 }
             }
     }

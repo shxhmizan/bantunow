@@ -1,22 +1,29 @@
 package com.example.bantunow
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import com.example.bantunow.databinding.ActivitySplashBinding
+import com.google.firebase.auth.FirebaseAuth
 
-@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySplashBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
-
-        // 2 seconds delay then go to LoginActivity
-        Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, LoginActivity::class.java))
+        
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser != null) {
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
-        }, 2000)
+            return
+        }
+
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.btnGetStarted.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
     }
 }

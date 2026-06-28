@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/task_title"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_secondary_grey" />
+
+    <EditText
+        android:id="@+id/etEditTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/task_title"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/task_pay"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_secondary_grey" />
+
+    <EditText
+        android:id="@+id/etEditPay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/task_pay"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/task_phone"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_secondary_grey" />
+
+    <EditText
+        android:id="@+id/etEditPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/task_phone"
+        android:inputType="phone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRemoveImage"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/remove_image"
+        android:textColor="@color/accent_coral_faded" />
+
+</LinearLayout>

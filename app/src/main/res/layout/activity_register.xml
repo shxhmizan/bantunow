@@ -172,12 +172,19 @@
             app:layout_constraintStart_toEndOf="@id/tv_or"
             app:layout_constraintTop_toTopOf="@id/divider_left" />
 
-        <com.google.android.gms.common.SignInButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_google_register"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="32dp"
+            android:text="@string/register_using_google"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorOnSurface"
+            app:icon="@drawable/ic_user"
+            app:iconGravity="textStart"
+            app:iconTint="@color/primary_neon"
             app:layout_constraintTop_toBottomOf="@id/tv_or"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

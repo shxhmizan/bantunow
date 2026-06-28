@@ -3,212 +3,299 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
-    android:scrollbars="none"
-    android:padding="24dp"
-    android:paddingTop="48dp">
+    android:background="@color/bg_light_grey"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="60dp"
+        android:paddingBottom="120dp">
 
-        <LinearLayout
-            android:id="@+id/btn_back"
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_chevron_left"
+            android:layout_marginStart="-12dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/back"
+            app:tint="@color/text_charcoal" />
+
+        <TextView
+            style="@style/TextAppearance.BantuNow.Heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_chevron_right"
-                android:rotation="180"
-                app:tint="@color/text_secondary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@string/back"
-                android:textColor="@color/text_secondary"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:text="Post a Task"
+            android:textSize="32sp" />
 
-        <!-- Title Header -->
         <TextView
+            style="@style/TextAppearance.BantuNow.Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/nav_give_job"
-            android:textColor="?attr/colorOnBackground"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:text="Describe what you need help with"
+            android:textColor="@color/text_secondary_grey"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="32dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fill in the task details to display on map."
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp"
-            android:layout_marginBottom="24dp" />
-
-        <!-- 2. Task Title Input -->
-        <TextView
-            style="@style/WorkFormLabel"
-            android:text="@string/task_title" />
-
-        <EditText
-            android:id="@+id/et_task_title"
+        <!-- Pure White Container for Form -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:background="@drawable/bg_input_rounded"
-            android:textColor="?attr/colorOnSurface"
-            android:textColorHint="@color/text_secondary"
-            android:hint="e.g. IKEA Table Assembly"
-            android:inputType="text"
-            android:textSize="14sp"
-            android:layout_marginBottom="20dp" />
-
-        <!-- 3. Task Description Input -->
-        <TextView
-            style="@style/WorkFormLabel"
-            android:text="@string/task_desc" />
-
-        <EditText
-            android:id="@+id/et_task_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minLines="4"
-            android:gravity="top|start"
-            android:padding="16dp"
-            android:background="@drawable/bg_input_rounded"
-            android:textColor="?attr/colorOnSurface"
-            android:textColorHint="@color/text_secondary"
-            android:hint="Describe your task..."
-            android:textSize="14sp"
-            android:layout_marginBottom="20dp" />
-
-        <!-- 4. Gaji & Phone Side-by-Side -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginBottom="20dp">
+            app:cardCornerRadius="24dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeWidth="0dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginEnd="8dp">
+                android:padding="24dp">
 
+                <!-- Task Title -->
                 <TextView
                     style="@style/WorkFormLabel"
-                    android:text="@string/task_pay" />
+                    android:text="@string/task_title"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="true" />
 
                 <EditText
-                    android:id="@+id/et_task_pay"
+                    android:id="@+id/et_task_title"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
+                    android:layout_height="54dp"
+                    android:paddingHorizontal="16dp"
                     android:background="@drawable/bg_input_rounded"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textColorHint="@color/text_secondary"
-                    android:hint="25"
+                    android:textColor="@color/text_charcoal"
+                    android:textColorHint="@color/text_secondary_grey"
+                    android:hint="e.g. IKEA Table Assembly"
+                    android:inputType="text"
                     android:textSize="14sp"
-                    android:inputType="number" />
-            </LinearLayout>
+                    android:layout_marginBottom="24dp"
+                    app:backgroundTint="@color/bg_light_grey" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="8dp">
-
+                <!-- Task Description -->
                 <TextView
                     style="@style/WorkFormLabel"
-                    android:text="@string/task_phone" />
+                    android:text="@string/task_desc"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="true" />
 
                 <EditText
-                    android:id="@+id/et_task_phone"
+                    android:id="@+id/et_task_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minLines="3"
+                    android:gravity="top|start"
                     android:padding="16dp"
                     android:background="@drawable/bg_input_rounded"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textColorHint="@color/text_secondary"
-                    android:hint="012-345 6789"
+                    android:textColor="@color/text_charcoal"
+                    android:textColorHint="@color/text_secondary_grey"
+                    android:hint="Describe your task..."
                     android:textSize="14sp"
-                    android:inputType="phone" />
+                    android:layout_marginBottom="24dp"
+                    app:backgroundTint="@color/bg_light_grey" />
+
+                <!-- Job Type -->
+                <TextView
+                    style="@style/WorkFormLabel"
+                    android:text="Job Type"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="true" />
+
+                <Spinner
+                    android:id="@+id/spinner_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_input_rounded"
+                    android:layout_marginBottom="24dp"
+                    app:backgroundTint="@color/bg_light_grey" />
+
+                <!-- Pay & Phone -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            style="@style/WorkFormLabel"
+                            android:text="@string/task_pay"
+                            android:textSize="12sp"
+                            android:textAllCaps="true" />
+
+                        <EditText
+                            android:id="@+id/et_task_pay"
+                            android:layout_width="match_parent"
+                            android:layout_height="54dp"
+                            android:paddingHorizontal="16dp"
+                            android:background="@drawable/bg_input_rounded"
+                            android:textColor="@color/text_charcoal"
+                            android:textColorHint="@color/text_secondary_grey"
+                            android:hint="25"
+                            android:textSize="14sp"
+                            android:inputType="number"
+                            app:backgroundTint="@color/bg_light_grey" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="8dp">
+
+                        <TextView
+                            style="@style/WorkFormLabel"
+                            android:text="Phone"
+                            android:textSize="12sp"
+                            android:textAllCaps="true" />
+
+                        <EditText
+                            android:id="@+id/et_task_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="54dp"
+                            android:paddingHorizontal="16dp"
+                            android:background="@drawable/bg_input_rounded"
+                            android:textColor="@color/text_charcoal"
+                            android:textColorHint="@color/text_secondary_grey"
+                            android:hint="012-345 6789"
+                            android:textSize="14sp"
+                            android:inputType="phone"
+                            app:backgroundTint="@color/bg_light_grey" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Location Selector -->
+                <TextView
+                    style="@style/WorkFormLabel"
+                    android:text="Set Location"
+                    android:textSize="12sp"
+                    android:textAllCaps="true" />
+
+                <LinearLayout
+                    android:id="@+id/layout_get_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_input_rounded"
+                    android:layout_marginBottom="24dp"
+                    app:backgroundTint="@color/bg_light_grey">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_location"
+                        app:tint="@color/text_secondary_grey" />
+
+                    <TextView
+                        android:id="@+id/tvLocationLabel"
+                        style="@style/TextAppearance.BantuNow.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="Tap to get location"
+                        android:textColor="@color/text_secondary_grey"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/ivLocationCheck"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_list"
+                        android:visibility="gone"
+                        app:tint="@color/accent_coral" />
+                </LinearLayout>
+
+                <!-- Image Picker -->
+                <TextView
+                    style="@style/WorkFormLabel"
+                    android:text="Add Photo"
+                    android:textSize="12sp"
+                    android:textAllCaps="true" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/layout_add_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/bg_light_grey"
+                    android:layout_marginBottom="32dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/iv_task_preview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_add_image_placeholder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_camera"
+                                app:tint="@color/text_secondary_grey" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tap to upload"
+                                android:textColor="@color/text_secondary_grey"
+                                android:textSize="12sp"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="sans-serif-medium" />
+                        </LinearLayout>
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Submit Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_submit_task"
+                    style="@style/Widget.BantuNow.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:text="@string/submit_task"
+                    android:textSize="17sp"
+                    android:textAllCaps="false"
+                    app:icon="@drawable/ic_send"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="12dp" />
+
             </LinearLayout>
-        </LinearLayout>
-
-        <!-- 6. Dashed Location Selector -->
-        <TextView
-            style="@style/WorkFormLabel"
-            android:text="Location" />
-
-        <LinearLayout
-            android:id="@+id/layout_get_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:background="@drawable/bg_dashed_border"
-            android:layout_marginBottom="28dp">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_location"
-                app:tint="@color/text_secondary"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:id="@+id/tvLocationLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/get_location"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/ivLocationCheck"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_list"
-                android:visibility="gone"
-                app:tint="@color/primary_neon" />
-        </LinearLayout>
-
-        <!-- 7. Bottom Submit Button -->
-        <Button
-            android:id="@+id/btn_submit_task"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/primary_neon"
-            android:textColor="@color/bg_dark_forest"
-            android:text="@string/submit_task"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:padding="16dp"
-            app:icon="@drawable/ic_send"
-            app:iconGravity="textEnd"
-            app:iconPadding="8dp"
-            app:iconTint="@color/bg_dark_forest"
-            app:cornerRadius="12dp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="80dp" />
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 </ScrollView>

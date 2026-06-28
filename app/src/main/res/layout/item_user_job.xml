@@ -3,17 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorOutlineVariant"
-    app:cardBackgroundColor="?attr/colorSurface">
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <LinearLayout
             android:id="@+id/ll_status_chips"
@@ -28,47 +27,49 @@
                 android:id="@+id/tv_status_chip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_status_orange"
-                android:paddingHorizontal="8dp"
+                android:background="@drawable/bg_input_rounded"
+                android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="@string/in_progress"
-                android:textColor="#E65100"
+                android:text="In Progress"
+                android:textColor="@color/accent_teal"
                 android:textSize="10sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05" />
 
             <TextView
                 android:id="@+id/tv_role_chip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/bg_chip_status_blue"
-                android:paddingHorizontal="8dp"
+                android:background="@drawable/bg_input_rounded"
+                android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="@string/you_are_performer"
-                android:textColor="#1A237E"
+                android:text="Performer"
+                android:textColor="@color/text_charcoal"
                 android:textSize="10sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_job_pay"
+            style="@style/TextAppearance.BantuNow.Heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="RM 69"
-            android:textColor="#BF360C"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:textColor="@color/accent_coral_faded"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_job_title"
+            style="@style/TextAppearance.BantuNow.Body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:text="Garden Lamp Wiring"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/iv_chevron"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,66 +77,131 @@
 
         <TextView
             android:id="@+id/tv_job_desc"
+            style="@style/TextAppearance.BantuNow.Body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Want to install new ceiling fan, ceiling already drilled."
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/ll_distance"
+            android:textColor="@color/text_secondary_grey"
+            android:textSize="13sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toStartOf="@+id/iv_chevron"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_job_title" />
+
+        <ImageView
+            android:id="@+id/iv_job_image"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_job_desc" />
 
         <LinearLayout
             android:id="@+id/ll_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_input_rounded"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_job_image">
 
             <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:src="@drawable/ic_location"
-                app:tint="@color/danger" />
+                app:tint="@color/text_secondary_grey" />
 
             <TextView
                 android:id="@+id/tv_job_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="6dp"
                 android:text="140.4 km"
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+                android:textColor="@color/text_secondary_grey"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/btn_delete_job"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_delete"
-            android:padding="4dp"
-            android:visibility="gone"
+        <!-- User Info Section (Assigner/Accepter) -->
+        <LinearLayout
+            android:id="@+id/ll_user_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_dot_gray"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/danger" />
+            app:layout_constraintTop_toBottomOf="@id/ll_distance">
 
-        <ImageView
-            android:id="@+id/btn_edit_job"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="12dp"
-            android:padding="4dp"
-            android:src="@drawable/ic_edit"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btn_delete_job"
-            app:tint="@color/primary_neon" />
+            <!-- Assigner Info -->
+            <LinearLayout
+                android:id="@+id/ll_assigner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Assigner: "
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary_grey" />
+                <TextView
+                    android:id="@+id/tv_assigner_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loading..."
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_charcoal" />
+            </LinearLayout>
+
+            <!-- Accepter Info (Shown to Assigner) -->
+            <LinearLayout
+                android:id="@+id/ll_accepter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_accepter_avatar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_user"
+                    app:shapeAppearanceOverlay="@style/CircleImage"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/ui_light_grey" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_accepter_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Accepter Name"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_charcoal" />
+                    <TextView
+                        android:id="@+id/tv_accepter_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rating: 5.0 ★"
+                        android:textSize="10sp"
+                        android:textColor="@color/medal_gold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_chevron"
@@ -145,7 +211,39 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_job_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_job_title"
-            app:tint="@color/text_secondary" />
+            app:tint="@color/border_soft" />
+
+        <!-- Edit/Delete buttons (Refined for Soft UI) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_delete_job"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_delete"
+                android:padding="6dp"
+                android:visibility="gone"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/accent_coral_faded"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:id="@+id/btn_edit_job"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_edit"
+                android:visibility="gone"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/text_charcoal"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

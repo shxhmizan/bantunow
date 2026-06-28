@@ -4,7 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
-    id("org.jetbrains.kotlin.plugin.serialization")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 
@@ -22,11 +22,7 @@ if (appPropertiesFile.exists()){
 
 android {
     namespace = "com.example.bantunow"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.bantunow"
@@ -39,17 +35,17 @@ android {
 
         //Adds the application properties that can be referenced in application code
         buildConfigField("String", "DATABASE_URL", "\"https://bantunow-default-rtdb.asia-southeast1.firebasedatabase.app/\"")
-        buildConfigField("String", "AUTH_WEB_CLIENT_ID", "\"76839332560-6b6v6v6v6v6v6v6v6v6v6v6v6v6v6v6v.apps.googleusercontent.com\"")
+        buildConfigField("String", "AUTH_WEB_CLIENT_ID", "\"155687453657-hq1sibpbjse1mqcio312idfqvdtri3qs.apps.googleusercontent.com\"")
         
-        // Gemini API Key from local.properties
-        val geminiKey = project.rootProject.file("local.properties").let {
+        // OpenRouter API Key from local.properties
+        val openRouterKey = project.rootProject.file("local.properties").let {
             if (it.exists()) {
                 val props = Properties()
                 props.load(it.inputStream())
-                props.getProperty("GEMINI_API_KEY", "")
+                props.getProperty("OPENROUTER_API_KEY", "")
             } else ""
         }
-        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
+        buildConfigField("String", "OPENROUTER_API_KEY", "\"$openRouterKey\"")
     }
 
     buildTypes {
@@ -86,7 +82,9 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.material)
     implementation(libs.play.services.location)
-    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+    implementation(libs.glide)
+    implementation(libs.okhttp)
+    implementation(libs.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
