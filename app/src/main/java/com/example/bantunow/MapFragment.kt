@@ -57,6 +57,7 @@ object StringOrNumberSerializer : KSerializer<String> {
 @Serializable
 data class InsightData(
     val count: Int,
+    val nearbyCount: Int = 0,
     @Serializable(with = StringOrNumberSerializer::class) val avg: String,
     val pop: String,
     val rawTasks: String? = null
@@ -90,6 +91,18 @@ class MapFragment : Fragment() {
         val firstName = user?.displayName?.split(" ")?.firstOrNull() ?: "User"
         binding.tvGreeting.text = "Hi, $firstName\nLooking for a job?"
 
+        // Automatically get user location to sync map
+        lifecycleScope.launch {
+            try {
+                val mainActivity = requireActivity() as MainActivity
+                mainActivity.requestLocation().addOnSuccessListener {
+                    // Location fetched, map will refresh via webview client once ready
+                }
+            } catch (e: Exception) {
+                Log.e("MapFragment", "Auto-location failed", e)
+            }
+        }
+
         binding.switchInsights.setOnCheckedChangeListener { _, isChecked ->
             binding.insightContainer.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
@@ -106,7 +119,7 @@ class MapFragment : Fragment() {
                         activity?.runOnUiThread {
                             if (_binding != null) {
                                 binding.statTotal.tvStatValue.text = data.count.toString()
-                                binding.miniActive.tvMiniValue.text = data.count.toString()
+                                binding.miniActive.tvMiniValue.text = data.nearbyCount.toString()
                                 binding.miniAverage.tvMiniValue.text = "RM ${data.avg}"
                                 binding.miniPopular.tvMiniValue.text = data.pop
                                 

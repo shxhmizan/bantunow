@@ -2,7 +2,7 @@ let map;
 const markers = {};
 let userMarker;
 let userCoords = { lat: 4.5921, lng: 101.0901 }; // Default to Perak/Ipoh
-let currentFilters = { radius: 1000, category: "All" }; // Show everything by default
+let currentFilters = { radius: 10, category: "All" }; // Default to 10km radius
 
 class TaskMapRequest {
     constructor(type, contents) {
@@ -35,7 +35,8 @@ if (mapListenerExists) {
 
             if (type === TaskMapResponse.NEARBY_TASK_LIST) {
                 clearMarkers();
-                let nearbyCount = 0;
+                let nearbyCount = 0; // Active within 10km
+                let totalActiveCount = 0; // All active tasks
                 let totalIncome = 0;
                 const categories = {};
                 const taskTitles = [];
@@ -45,15 +46,22 @@ if (mapListenerExists) {
                 for (const [id, task] of Object.entries(contents)) {
                     if (task.latitude == null || task.longitude == null) continue;
 
-                    // Count all active work (open, in_progress, ongoing, done_by_worker)
+                    const distToUser = calculateDistance(userCoords.lat, userCoords.lng, task.latitude, task.longitude);
+
+                    // Count active work
                     const isActive = task.status !== "completed";
 
                     if (isActive) {
-                        nearbyCount++;
-                        totalIncome += ((task.paymentAmount || 0) / 100);
-                        const cat = task.category || "General";
-                        categories[cat] = (categories[cat] || 0) + 1;
-                        taskTitles.push(task.title);
+                        totalActiveCount++;
+
+                        // Count for the "Active 10km" label
+                        if (distToUser <= 10) {
+                            nearbyCount++;
+                            totalIncome += ((task.paymentAmount || 0) / 100);
+                            const cat = task.category || "General";
+                            categories[cat] = (categories[cat] || 0) + 1;
+                            taskTitles.push(task.title);
+                        }
                     }
 
                     // Only show markers for tasks that are actually "open" or "in_progress"
@@ -88,7 +96,8 @@ if (mapListenerExists) {
                 const popular = Object.keys(categories).length > 0 ? Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b) : "-";
 
                 console.log("INSIGHTS:" + JSON.stringify({
-                    count: nearbyCount,
+                    count: totalActiveCount,
+                    nearbyCount: nearbyCount,
                     avg: avgIncome,
                     pop: popular,
                     rawTasks: taskTitles.join(", ")
@@ -98,6 +107,11 @@ if (mapListenerExists) {
                 userCoords.lat = contents.latitude;
                 userCoords.lng = contents.longitude;
                 centerOnLocation(contents.latitude, contents.longitude);
+
+                // Refresh tasks to ensure "Active 10km" count uses the new coordinates
+                if (mapListenerExists) {
+                    appWebMsgListener.postMessage(JSON.stringify(new TaskMapRequest(TaskMapRequest.GET_NEARBY_TASKS, null)));
+                }
             }
         } catch (ex) {
             console.error("Error in onmessage:", ex);

@@ -67,6 +67,13 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        // Proactively fetch location if permission already granted
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            requestLocation().addOnSuccessListener { location ->
+                Log.d("MainActivity", "Initial location: ${location.latitude}, ${location.longitude}")
+            }
+        }
+
         val firestore = FirebaseFirestore.getInstance()
         taskMapManager = object : TaskMapManager(firestore, fusedLocationClient) {
             @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])

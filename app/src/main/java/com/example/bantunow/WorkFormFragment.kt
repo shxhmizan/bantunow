@@ -31,9 +31,11 @@ class WorkFormFragment : Fragment() {
     private val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
         uri?.let {
             imageUri = it
-            binding.ivTaskPreview.setImageURI(it)
-            binding.ivTaskPreview.visibility = View.VISIBLE
-            binding.llAddImagePlaceholder.visibility = View.GONE
+            _binding?.let { b ->
+                b.ivTaskPreview.setImageURI(it)
+                b.ivTaskPreview.visibility = View.VISIBLE
+                b.llAddImagePlaceholder.visibility = View.GONE
+            }
         }
     }
 
@@ -57,6 +59,9 @@ class WorkFormFragment : Fragment() {
             fetchCurrentLocation()
         }
 
+        // Auto-fetch location on load
+        fetchCurrentLocation()
+
         binding.layoutAddImage.setOnClickListener {
             pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
@@ -79,9 +84,11 @@ class WorkFormFragment : Fragment() {
             // Check Wallet Balance
             val userRef = db.collection("users").document(currentUserId)
             userRef.get().addOnSuccessListener { doc ->
+                if (_binding == null) return@addOnSuccessListener
+                
                 val balance = doc.getDouble("walletBalance") ?: 0.0
                 if (balance < pay) {
-                    Toast.makeText(requireContext(), "Insufficient wallet balance (RM $balance). Please top up first.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Insufficient wallet balance (RM $balance). Please top up first.", Toast.LENGTH_LONG).show()
                 } else {
                     // Deduct, Post and Award Points
                     db.runTransaction { transaction ->
@@ -122,9 +129,11 @@ class WorkFormFragment : Fragment() {
                         }
                         transaction.set(newTaskRef, taskData)
                     }.addOnSuccessListener {
+                        if (context == null) return@addOnSuccessListener
                         Toast.makeText(requireContext(), "Task posted! RM $pay deducted from wallet.", Toast.LENGTH_LONG).show()
                         parentFragmentManager.popBackStack()
                     }.addOnFailureListener { e ->
+                        if (context == null) return@addOnFailureListener
                         Log.e("WorkForm", "Transaction failed", e)
                         Toast.makeText(requireContext(), "Failed to post task", Toast.LENGTH_SHORT).show()
                     }
@@ -144,14 +153,16 @@ class WorkFormFragment : Fragment() {
     }
 
     private fun fetchCurrentLocation() {
-        val activity = requireActivity()
+        val activity = activity ?: return
         if (activity is MainActivity) {
             activity.requestLocation().addOnSuccessListener { location ->
                 latitude = location.latitude
                 longitude = location.longitude
-                binding.tvLocationLabel.text = String.format(Locale.US, "Coordinate: %.6f, %.6f", latitude, longitude)
-                binding.ivLocationCheck.visibility = View.VISIBLE
-                binding.layoutGetLocation.setBackgroundResource(R.drawable.bg_input_rounded)
+                _binding?.let { b ->
+                    b.tvLocationLabel.text = String.format(Locale.US, "Coordinate: %.6f, %.6f", latitude, longitude)
+                    b.ivLocationCheck.visibility = View.VISIBLE
+                    b.layoutGetLocation.setBackgroundResource(R.drawable.bg_input_rounded)
+                }
             }.addOnFailureListener {
                 useDefaultLocation()
             }
@@ -163,8 +174,10 @@ class WorkFormFragment : Fragment() {
     private fun useDefaultLocation() {
         latitude = 4.183993
         longitude = 101.218559
-        binding.tvLocationLabel.text = String.format(Locale.US, "Default: %.6f, %.6f", latitude, longitude)
-        binding.ivLocationCheck.visibility = View.VISIBLE
+        _binding?.let { b ->
+            b.tvLocationLabel.text = String.format(Locale.US, "Default: %.6f, %.6f", latitude, longitude)
+            b.ivLocationCheck.visibility = View.VISIBLE
+        }
     }
 
     override fun onDestroyView() {

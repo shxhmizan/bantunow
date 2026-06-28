@@ -27,6 +27,10 @@ class UserJobListFragment : Fragment() {
     private lateinit var acceptedAdapter: TaskAdapter
     private lateinit var historyAdapter: TaskAdapter
 
+    private var allPostedTasks: List<Task> = emptyList()
+    private var allAcceptedTasks: List<Task> = emptyList()
+    private var allHistoryTasks: List<Task> = emptyList()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,8 +48,33 @@ class UserJobListFragment : Fragment() {
         }
 
         setupRecyclerViews()
+        setupSearch()
         fetchUserTasks()
         fetchUserLocation()
+    }
+
+    private fun setupSearch() {
+        binding.etSearchTasks.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterTasks(s.toString())
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+    }
+
+    private fun filterTasks(query: String) {
+        val filteredPosted = allPostedTasks.filter { it.title?.contains(query, ignoreCase = true) == true }
+        val filteredAccepted = allAcceptedTasks.filter { it.title?.contains(query, ignoreCase = true) == true }
+        val filteredHistory = allHistoryTasks.filter { it.title?.contains(query, ignoreCase = true) == true }
+
+        postedAdapter.updateTasks(filteredPosted)
+        acceptedAdapter.updateTasks(filteredAccepted)
+        historyAdapter.updateTasks(filteredHistory)
+
+        binding.tvPostedCount.text = getString(R.string.posted_by_me, filteredPosted.size)
+        binding.tvAcceptedCount.text = getString(R.string.accepted_by_me, filteredAccepted.size)
+        binding.tvHistoryCount.text = getString(R.string.history, filteredHistory.size)
     }
 
     private fun setupRecyclerViews() {
@@ -99,21 +128,16 @@ class UserJobListFragment : Fragment() {
                     return@addSnapshotListener
                 }
 
-                val allTasks = snapshots?.documents?.mapNotNull { doc ->
+                val allTasksFromDb = snapshots?.documents?.mapNotNull { doc ->
                     doc.toObject(Task::class.java)?.apply { taskId = doc.id }
                 } ?: emptyList()
 
-                val postedTasks = allTasks.filter { it.ownerID == userId && it.status != "completed" }
-                val acceptedTasks = allTasks.filter { it.workerID == userId && it.status != "completed" }
-                val historyTasks = allTasks.filter { (it.ownerID == userId || it.workerID == userId) && it.status == "completed" }
+                allPostedTasks = allTasksFromDb.filter { it.ownerID == userId && it.status != "completed" }
+                allAcceptedTasks = allTasksFromDb.filter { it.workerID == userId && it.status != "completed" }
+                allHistoryTasks = allTasksFromDb.filter { (it.ownerID == userId || it.workerID == userId) && it.status == "completed" }
 
-                postedAdapter.updateTasks(postedTasks)
-                acceptedAdapter.updateTasks(acceptedTasks)
-                historyAdapter.updateTasks(historyTasks)
-
-                binding.tvPostedCount.text = getString(R.string.posted_by_me, postedTasks.size)
-                binding.tvAcceptedCount.text = getString(R.string.accepted_by_me, acceptedTasks.size)
-                binding.tvHistoryCount.text = getString(R.string.history, historyTasks.size)
+                // Apply current filter
+                filterTasks(binding.etSearchTasks.text.toString())
             }
     }
 
