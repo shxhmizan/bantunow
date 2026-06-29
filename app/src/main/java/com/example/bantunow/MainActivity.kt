@@ -70,7 +70,11 @@ class MainActivity : AppCompatActivity() {
         // Proactively fetch location if permission already granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             requestLocation().addOnSuccessListener { location ->
-                Log.d("MainActivity", "Initial location: ${location.latitude}, ${location.longitude}")
+                if (location != null) {
+                    Log.d("MainActivity", "Initial location: ${location.latitude}, ${location.longitude}")
+                } else {
+                    Log.d("MainActivity", "Initial location is null")
+                }
             }
         }
 

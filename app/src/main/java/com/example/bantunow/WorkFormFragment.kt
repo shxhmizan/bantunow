@@ -156,12 +156,16 @@ class WorkFormFragment : Fragment() {
         val activity = activity ?: return
         if (activity is MainActivity) {
             activity.requestLocation().addOnSuccessListener { location ->
-                latitude = location.latitude
-                longitude = location.longitude
-                _binding?.let { b ->
-                    b.tvLocationLabel.text = String.format(Locale.US, "Coordinate: %.6f, %.6f", latitude, longitude)
-                    b.ivLocationCheck.visibility = View.VISIBLE
-                    b.layoutGetLocation.setBackgroundResource(R.drawable.bg_input_rounded)
+                if (location != null) {
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    _binding?.let { b ->
+                        b.tvLocationLabel.text = String.format(Locale.US, "Coordinate: %.6f, %.6f", latitude, longitude)
+                        b.ivLocationCheck.visibility = View.VISIBLE
+                        b.layoutGetLocation.setBackgroundResource(R.drawable.bg_input_rounded)
+                    }
+                } else {
+                    useDefaultLocation()
                 }
             }.addOnFailureListener {
                 useDefaultLocation()

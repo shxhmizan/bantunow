@@ -59,7 +59,7 @@
     <string name="leaderboard_title">Community Leaderboard</string>
     <string name="heatmap_desc">Active Users Heatmap</string>
     <string name="save_success">Settings saved successfully</string>
-    <string name="terms_text">BantuNow Terms and Conditions\n\n1. Community Guidelines\nBantuNow is a platform for campus community assistance. Users are expected to be respectful, honest, and helpful at all times.\n\n2. Safety and Trust\nAlways meet in public areas for task handovers. Do not share sensitive personal information beyond what is necessary for task completion.\n\n3. Payment Policy\nPayments are handled through the internal wallet system. BantuNow is not responsible for external cash transactions between users.\n\n4. Prohibited Activities\nIllegal services, academic dishonesty, and harassment are strictly prohibited and will lead to immediate account suspension.</string>
+    <string name="terms_text">BantuNow Terms and Conditions\n\n1. Community Guidelines\nBantuNow is a platform for hyperlocal community assistance. Users are expected to be respectful, honest, and helpful at all times.\n\n2. Safety and Trust\nAlways meet in public areas for task handovers. Do not share sensitive personal information beyond what is necessary for task completion.\n\n3. Payment Policy\nPayments are handled through the internal wallet system. BantuNow is not responsible for external cash transactions between users.\n\n4. Prohibited Activities\nIllegal services, academic dishonesty, and harassment are strictly prohibited and will lead to immediate account suspension.</string>
     <string name="total_jobs">TOTAL</string>
     <string name="open_jobs">OPEN</string>
     <string name="in_progress_jobs">IN PROGRESS</string>
