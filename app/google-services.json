@@ -1,0 +1,34 @@
+{
+  "project_info": {
+    "project_number": "155687453657",
+    "project_id": "bantu-now-bff0d",
+    "storage_bucket": "bantu-now-bff0d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155687453657:android:160965ef36a6115d684fc8",
+        "android_client_info": {
+          "package_name": "com.example.bantunow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "155687453657-hq1sibpbjse1mqcio312idfqvdtri3qs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAumMgMVlSMZP3SBFCqSpRgN_SwZ60t_Gc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
