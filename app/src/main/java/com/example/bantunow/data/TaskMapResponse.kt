@@ -3,7 +3,11 @@ package com.example.bantunow.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-class TaskMapResponse<T>(val type: Type, val contents:T ) {
+class TaskMapResponse<T>(
+    val type: Type,
+    val contents: T,
+    val currentUserId: String? = null
+) {
     @Serializable
     enum class Type {
         NEARBY_TASK_LIST,
@@ -12,5 +16,4 @@ class TaskMapResponse<T>(val type: Type, val contents:T ) {
     }
     @Serializable
     data class Location(val latitude:Double, val longitude:Double)
-
 }

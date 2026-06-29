@@ -69,7 +69,8 @@ abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClie
                                 val taskJson = Json.encodeToString(
                                     TaskMapResponse(
                                         TaskMapResponse.Type.NEARBY_TASK_LIST,
-                                        tasksMap
+                                        tasksMap,
+                                        com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
                                     )
                                 )
                                 Log.d("TaskMapManager", "Posting ${tasksMap.size} tasks to JS")
@@ -95,7 +96,8 @@ abstract class TaskMapManager(val firestore: FirebaseFirestore, val locationClie
                                                 TaskMapResponse.Location(
                                                     latitude = location.latitude,
                                                     longitude = location.longitude
-                                                )
+                                                ),
+                                                com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
                                             )
                                         )
                                     )

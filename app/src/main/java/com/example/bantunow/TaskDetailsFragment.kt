@@ -69,13 +69,34 @@ class TaskDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        // Hide bottom navigation
+        (requireActivity() as? MainActivity)?.setBottomNavigationVisibility(false)
 
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
-        binding.tvTaskOwner.text = userExtra?.displayName ?: "Unknown"
+        binding.tvTaskOwner.text = userExtra?.displayName ?: "Loading..."
         
+        if (userExtra == null) {
+            task.ownerID?.let { ownerId ->
+                db.collection("users").document(ownerId).get().addOnSuccessListener { doc ->
+                    if (isAdded) {
+                        val fetchedUser = doc.toObject(UserExtra::class.java)
+                        binding.tvTaskOwner.text = fetchedUser?.displayName ?: "Unknown"
+                        fetchedUser?.profileImageUrl?.let { url ->
+                            Glide.with(this)
+                                .load(url)
+                                .circleCrop()
+                                .placeholder(R.drawable.ic_user)
+                                .into(binding.ivOwnerAvatar)
+                        }
+                    }
+                }
+            }
+        }
+
         userExtra?.profileImageUrl?.let { url ->
             Glide.with(this)
                 .load(url)
@@ -92,12 +113,10 @@ class TaskDetailsFragment : Fragment() {
         
         if (!task.imageUrl.isNullOrEmpty()) {
             binding.cardTaskImage.visibility = View.VISIBLE
-            try {
-                binding.ivTaskImage.setImageURI(Uri.parse(task.imageUrl))
-            } catch (e: SecurityException) {
-                Log.e("TaskDetails", "No permission to access URI: ${task.imageUrl}", e)
-                binding.cardTaskImage.visibility = View.GONE
-            }
+            Glide.with(this)
+                .load(task.imageUrl)
+                .placeholder(R.drawable.bg_form_input)
+                .into(binding.ivTaskImage)
         }
 
         val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
@@ -328,6 +347,8 @@ class TaskDetailsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Show bottom navigation again
+        (requireActivity() as? MainActivity)?.setBottomNavigationVisibility(true)
         _binding = null
     }
 }

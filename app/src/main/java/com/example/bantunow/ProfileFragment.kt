@@ -35,10 +35,7 @@ class ProfileFragment : Fragment() {
         loadUserData()
 
         binding.btnTopup.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, TopUpFragment())
-                .addToBackStack(null)
-                .commit()
+            TopUpFragment().show(parentFragmentManager, "TopUpDialog")
         }
 
         binding.btnWithdrawEntry.setOnClickListener {

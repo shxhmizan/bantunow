@@ -1,6 +1,7 @@
 let map;
 const markers = {};
 let userMarker;
+let currentUserId = null;
 let userCoords = { lat: 4.5921, lng: 101.0901 }; // Default to Perak/Ipoh
 let currentFilters = { radius: 10, category: "All" }; // Default to 10km radius
 
@@ -18,6 +19,7 @@ class TaskMapResponse {
     constructor(srcData) {
         this.type = srcData.type;
         this.contents = srcData.contents;
+        this.currentUserId = srcData.currentUserId;
     }
     static NEARBY_TASK_LIST = "NEARBY_TASK_LIST";
     static CURRENT_LOCATION = "CURRENT_LOCATION";
@@ -32,6 +34,9 @@ if (mapListenerExists) {
             const response = new TaskMapResponse(JSON.parse(event.data));
             const type = response.type;
             const contents = response.contents;
+            if (response.currentUserId) {
+                currentUserId = response.currentUserId;
+            }
 
             if (type === TaskMapResponse.NEARBY_TASK_LIST) {
                 clearMarkers();
@@ -88,7 +93,7 @@ if (mapListenerExists) {
                     const matchesCategory = currentFilters.category === "All" || cat === currentFilters.category;
 
                     if (matchesRadius && matchesCategory) {
-                        addJobMarker(id, finalLat, finalLng, task.title, task.paymentAmount, task.desc, dist, task.status);
+                        addJobMarker(id, finalLat, finalLng, task.title, task.paymentAmount, task.desc, dist, task.status, task.ownerID);
                     }
                 }
 
@@ -159,25 +164,29 @@ function requestLocationRefresh() {
     }
 }
 
-const neonIcon = L.divIcon({
-    className: 'custom-div-icon',
-    html: `<div class="marker-pulse"></div>
-           <div class="marker-pin">
-             <img src="https://img.icons8.com/material-rounded/24/ffffff/briefcase.png"/>
-           </div>`,
-    iconSize: [34, 34],
-    iconAnchor: [17, 34]
-});
-
-function addJobMarker(id, lat, lng, title, payCents, desc, dist, status) {
+function addJobMarker(id, lat, lng, title, payCents, desc, dist, status, ownerID) {
     const payFormatted = ((payCents || 0) / 100).toFixed(0);
     const statusText = (status || "open").toUpperCase().replace("_", " ");
     const statusColor = status === "open" ? "#EAEAEA" : "#C4E4E1";
+    const isOwned = currentUserId && ownerID === currentUserId;
+    const buttonText = isOwned ? "REVIEW AND EDIT": "REVIEW AND ACCEPT";
+    const markerClass = isOwned ? "owned" : "";
+
+    const customIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div class="marker-pulse ${markerClass}"></div>
+               <div class="marker-pin ${markerClass}">
+                 <img src="https://img.icons8.com/material-rounded/24/ffffff/briefcase.png"/>
+               </div>`,
+        iconSize: [34, 34],
+        iconAnchor: [17, 34]
+    });
 
     const popupContent = `
         <div class="popup-container" style="min-width: 250px; font-family: 'Google Sans', sans-serif; padding: 10px;">
             <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                 <span style="background: ${statusColor}; color: #1C1C1C; padding: 4px 12px; border-radius: 8px; font-size: 10px; font-weight: bold; border: 1px solid #EAEAEA;">${statusText}</span>
+                ${isOwned ? '<span style="background: #2196F3; color: white; padding: 4px 12px; border-radius: 8px; font-size: 10px; font-weight: bold;">YOU ARE OWNER</span>' : ''}
             </div>
             <div style="font-size: 20px; font-weight: 800; color: #1C1C1C; margin-bottom: 4px; font-family: 'Playfair Display', serif;">${title}</div>
             <div style="font-size: 14px; color: #757575; margin-bottom: 20px;">${desc || 'No description provided'}</div>
@@ -190,13 +199,13 @@ function addJobMarker(id, lat, lng, title, payCents, desc, dist, status) {
             </div>
 
             <a href="javascript:void(0);" onclick="onMarkerClick('${id}')"
-               style="display: block; background: #C4E4E1; color: #1C1C1C; text-align: center; padding: 14px; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 15px; box-shadow: 0 4px 12px rgba(196,228,225,0.2);">
-               REVIEW AND ACCEPT
+               style="display: block; background: ${isOwned ? '#2196F3' : '#C4E4E1'}; color: ${isOwned ? 'white' : '#1C1C1C'}; text-align: center; padding: 14px; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 15px; box-shadow: 0 4px 12px rgba(196,228,225,0.2);">
+               ${buttonText}
             </a>
         </div>
     `;
 
-    const marker = L.marker([lat, lng], { icon: neonIcon })
+    const marker = L.marker([lat, lng], { icon: customIcon })
         .addTo(map)
         .bindPopup(popupContent, {
             maxWidth: 300,

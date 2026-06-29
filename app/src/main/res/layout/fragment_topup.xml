@@ -1,152 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_creamy_white"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="28dp"
+    app:cardElevation="8dp">
 
-    <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_chevron_left"
-        app:tint="@color/text_charcoal" />
-
-    <TextView
-        style="@style/TextAppearance.BantuNow.Heading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Wallet Top Up"
-        android:textSize="32sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Secure mock payment gateway"
-        android:textColor="@color/text_secondary_grey" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="2dp"
-        app:cardBackgroundColor="@color/white">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ENTER AMOUNT (RM)"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_secondary_grey" />
-
-            <EditText
-                android:id="@+id/et_amount"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_input_rounded"
-                android:hint="50.00"
-                android:inputType="numberDecimal"
-                android:paddingHorizontal="20dp"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/brand_terracotta" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="SELECT BANK"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_secondary_grey" />
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:scrollbars="none">
-                <RadioGroup
-                    android:id="@+id/rg_banks"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <RadioButton
-                        android:id="@+id/rb_maybank"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Maybank2u"
-                        android:button="@null"
-                        android:background="@drawable/bg_chip_status_mint"
-                        android:padding="12dp"
-                        android:layout_marginEnd="8dp" />
-                    <RadioButton
-                        android:id="@+id/rb_cimb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CIMB Clicks"
-                        android:button="@null"
-                        android:background="@drawable/bg_chip_status_mint"
-                        android:padding="12dp"
-                        android:layout_marginEnd="8dp" />
-                    <RadioButton
-                        android:id="@+id/rb_bank_islam"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bank Islam"
-                        android:button="@null"
-                        android:background="@drawable/bg_chip_status_mint"
-                        android:padding="12dp" />
-                </RadioGroup>
-            </HorizontalScrollView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_proceed"
-                style="@style/Widget.BantuNow.Button"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginTop="32dp"
-                android:text="Proceed to Payment" />
-
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Success View (Initially Gone) -->
     <LinearLayout
-        android:id="@+id/ll_auth_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#E6F5F2EB"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_creamy_white"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:elevation="10dp">
+        android:padding="24dp">
 
-        <ProgressBar
-            android:id="@+id/pb_payment"
-            android:layout_width="64dp"
-            android:layout_height="64dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/TextAppearance.BantuNow.Heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top Up Wallet"
+                android:textSize="24sp" />
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_close"
+                app:tint="@color/text_charcoal" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_auth_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Authenticating with Bank..."
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:layout_marginTop="4dp"
+            android:text="Select your bank and amount"
+            android:textColor="@color/text_secondary_grey"
+            android:textSize="14sp" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="ENTER AMOUNT (RM)"
+            android:textColor="@color/text_secondary_grey"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_amount"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input_rounded"
+            android:hint="0.00"
+            android:inputType="numberDecimal"
+            android:paddingHorizontal="20dp"
+            android:textColor="@color/brand_terracotta"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="SELECT BANK"
+            android:textColor="@color/text_secondary_grey"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_bank"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/actv_bank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Choose your bank"
+                android:inputType="none"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_proceed"
+            style="@style/Widget.BantuNow.Button"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="32dp"
+            android:text="Proceed to Payment" />
+
+        <!-- Success/Processing View (Inside the same container for simplicity in dialog) -->
+        <FrameLayout
+            android:id="@+id/ll_auth_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ProgressBar
+                    android:id="@+id/pb_payment"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp" />
+
+                <TextView
+                    android:id="@+id/tv_auth_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Authenticating..."
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

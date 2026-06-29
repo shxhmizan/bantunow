@@ -103,6 +103,8 @@ class ChatbotFragment : Fragment() {
         binding.btnSuggestJob.setOnClickListener { onSuggestionClicked(binding.btnSuggestJob.text.toString()) }
         binding.btnSuggestPrice.setOnClickListener { onSuggestionClicked(binding.btnSuggestPrice.text.toString()) }
         binding.btnSuggestPoints.setOnClickListener { onSuggestionClicked(binding.btnSuggestPoints.text.toString()) }
+        binding.btnSuggestLeaderboard.setOnClickListener { onSuggestionClicked(binding.btnSuggestLeaderboard.text.toString()) }
+        binding.btnSuggestBalance.setOnClickListener { onSuggestionClicked(binding.btnSuggestBalance.text.toString()) }
 
         binding.btnSendFloating.setOnClickListener {
             val text = binding.etChatInput.text.toString().trim()
@@ -120,30 +122,23 @@ class ChatbotFragment : Fragment() {
         systemMsg.addProperty("content", """
         You are BantuBot 🤖, the friendly AI companion for BantuNow — Empowering Communities through Hyperlocal, AI-Driven Micro-Tasking.
         
-        Your personality:
-        - Warm, encouraging, and casual — like a helpful senior student
-        - Use light emojis occasionally (not every sentence) to feel approachable 😊
-        - Celebrate wins with the user (e.g. when they accept a task or earn points)
-        - If the user seems stressed or unsure, reassure them gently
-        - Never sound robotic or corporate — keep it human and relatable
+        STRICT GUARDRAILS:
+        - ONLY answer questions related to the BantuNow app, community micro-tasking, local help, or your capabilities.
+        - If a user asks something completely unrelated (e.g., world history, coding in C++, celebrity gossip), politely decline and say: "I'm here to help with BantuNow related things! Let's get back to tasks or points 😊"
         
-        Your capabilities:
-        - Help users find available jobs/tasks on the platform
-        - When a user asks for jobs or what's new, always HIGHLIGHT the latest job (the first one in the list provided in context) as "FRESH" or "NEWLY ADDED".
-        - When a user wants to accept a task, respond with [ACCEPT_TASK: Task Title]
-        - Give advice on pricing, BantuPoints, and how the platform works
-        - Answer general questions a user might have
+        Your personality:
+        - Warm, encouraging, and casual — like a helpful senior student.
+        - Use light emojis occasionally.
+        
+        Your capabilities & rules:
+        - Help users find available jobs. IF THERE ARE NO JOBS IN THE CONTEXT provided, say: "There are no jobs available at the moment."
+        - Provide leaderboard info and wallet balance when asked (context will be provided).
+        - When a user asks for jobs or what's new, HIGHLIGHT the latest job as "FRESH".
+        - When a user wants to accept a task, respond with [ACCEPT_TASK: Task Title].
+        - Give advice on pricing (Cleaning: RM15-30, Delivery: RM10-25, Repair: RM30+).
         
         Response style:
-        - Keep responses concise and scannable
-        - Use **bold** for important words or task titles
-        - Use bullet points for lists
-        - End with a soft follow-up question or encouragement when appropriate
-        
-        Example tone:
-        "Hey! I found 3 tasks near you 🎯 Here's what's available right now..."
-        "Great choice! Let me secure that for you right away 💪"
-        "No worries, I've got you covered!"
+        - Concise and scannable with **bold** highlights.
     """.trimIndent())
         chatHistory.add(systemMsg)
     }
@@ -237,40 +232,46 @@ class ChatbotFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // Agentic logic: Fetch jobs if user asks
-                var finalUserText = userText
-                if (userText.contains("job", ignoreCase = true) || userText.contains("task", ignoreCase = true)) {
-                    val isNearby = userText.contains("near me", ignoreCase = true) || 
-                                     userText.contains("nearby", ignoreCase = true) ||
-                                     userText.contains("around", ignoreCase = true)
+                // Agentic logic: Fetch jobs/leaderboard/wallet if relevant
+                var contextInjected = ""
+                
+                // 1. Job context
+                if (userText.contains("job", true) || userText.contains("task", true)) {
+                    val isNearby = userText.contains("near me", true) || userText.contains("nearby", true)
+                    var loc: Location? = null
+                    if (isNearby) loc = (activity as? MainActivity)?.requestLocation()?.await()
                     
-                    var userLocation: Location? = null
-                    if (isNearby) {
-                        try {
-                            userLocation = (activity as? MainActivity)?.requestLocation()?.await()
-                        } catch (e: Exception) {
-                            Log.e("BantuBot", "Failed to get location", e)
-                        }
-                    }
-
-                    val jobs = fetchAvailableJobs(userLocation)
+                    val jobs = fetchAvailableJobs(loc)
                     if (jobs.isNotEmpty()) {
-                        val jobsText = jobs.mapIndexed { index, task ->
-                            val distStr = if (userLocation != null && task.latitude != null && task.longitude != null) {
-                                val taskLoc = Location("task").apply {
-                                    latitude = task.latitude!!
-                                    longitude = task.longitude!!
-                                }
-                                " (%.2f km away)".format(userLocation.distanceTo(taskLoc) / 1000.0)
-                            } else ""
-                            val tag = if (index == 0) "[LATEST/NEWLY ADDED] " else ""
-                            "- $tag**${task.title}**: RM${task.paymentAmount?.div(100)}$distStr (${task.category})"
+                        val jobsText = jobs.mapIndexed { i, t ->
+                            "- ${if(i==0)"[LATEST] " else ""}**${t.title}**: RM${t.paymentAmount?.div(100)} (${t.category})"
                         }.joinToString("\n")
-                        finalUserText = "Context: The following jobs are currently available in the database (sorted by latest):\n$jobsText\n\nUser Message: $userText"
+                        contextInjected += "Available Jobs:\n$jobsText\n\n"
+                    } else {
+                        contextInjected += "Context: No jobs are currently available in the database.\n\n"
                     }
                 }
 
-                // Add to history (after potential context enrichment)
+                // 2. Leaderboard context
+                if (userText.contains("leaderboard", true) || userText.contains("leading", true) || userText.contains("top", true)) {
+                    val topUsers = fetchTopUsers()
+                    if (topUsers.isNotEmpty()) {
+                        val lbText = topUsers.mapIndexed { i, u -> "${i+1}. ${u.first}: ${u.second} pts" }.joinToString("\n")
+                        contextInjected += "Leaderboard (Top Users):\n$lbText\n\n"
+                    }
+                }
+
+                // 3. Wallet context
+                if (userText.contains("balance", true) || userText.contains("wallet", true) || userText.contains("money", true)) {
+                    val balance = fetchUserBalance()
+                    contextInjected += "Current User Wallet Balance: RM $balance\n\n"
+                }
+
+                val finalUserText = if (contextInjected.isNotEmpty()) {
+                    "$contextInjected User Message: $userText"
+                } else userText
+
+                // Add to history
                 val userMsg = JsonObject()
                 userMsg.addProperty("role", "user")
                 userMsg.addProperty("content", finalUserText)
@@ -303,6 +304,27 @@ class ChatbotFragment : Fragment() {
                 addBotMessage("Sorry, I'm having trouble connecting. Please try again.")
             }
         }
+    }
+
+    private suspend fun fetchUserBalance(): Double = withContext(Dispatchers.IO) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@withContext 0.0
+        try {
+            val doc = db.collection("users").document(uid).get().await()
+            doc.getDouble("walletBalance") ?: 0.0
+        } catch (e: Exception) { 0.0 }
+    }
+
+    private suspend fun fetchTopUsers(): List<Pair<String, Long>> = withContext(Dispatchers.IO) {
+        try {
+            val snapshot = db.collection("users")
+                .orderBy("bantuPoints", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(3)
+                .get()
+                .await()
+            snapshot.documents.map { 
+                (it.getString("displayName") ?: "User") to (it.getLong("bantuPoints") ?: 0L)
+            }
+        } catch (e: Exception) { emptyList() }
     }
 
     private suspend fun fetchAvailableJobs(userLocation: Location? = null): List<Task> = withContext(Dispatchers.IO) {

@@ -99,14 +99,15 @@ class MainActivity : AppCompatActivity() {
                                 } else 0.0
                                 
                                 val currentUserId = firebaseAuth.currentUser?.uid
-                                if(task.ownerID == currentUserId || task.workerID == currentUserId){
+                                if((task.ownerID == currentUserId || task.workerID == currentUserId) && task.status != "open"){
                                     loadFragment(TaskDetailsFragment.newInstance(task, distance, userExtra), true)
                                 }
                                 else loadFragment(TaskReviewFragment(task, distance, userExtra), true)
                             }
                         } catch (e: SecurityException) {
                             Log.e("MainActivity", "Permission denied for lastLocation", e)
-                            if(taskCreator == firebaseAuth.currentUser?.uid){
+                            val currentUserId = firebaseAuth.currentUser?.uid
+                            if((task.ownerID == currentUserId || task.workerID == currentUserId) && task.status != "open"){
                                 loadFragment(TaskDetailsFragment.newInstance(task, 0.0, userExtra), true)
                             }
                             else loadFragment(TaskReviewFragment(task, 0.0, userExtra), true)
@@ -158,6 +159,33 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
+    fun navigateToTasks(editTaskId: String? = null) {
+        // Prevent recursive listener calls by setting selection manually if possible, 
+        // or just handle it in the listener.
+        val fragment = UserJobListFragment().apply {
+            if (editTaskId != null) {
+                arguments = Bundle().apply {
+                    putString("editTaskId", editTaskId)
+                }
+            }
+        }
+        // This will trigger the listener, which we've made smart enough to handle this
+        binding.bottomNavigation.selectedItemId = R.id.nav_tasks
+        
+        // If the listener didn't load the right one (because it was already selected),
+        // we force load it with the arguments.
+        val current = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (current !is UserJobListFragment || editTaskId != null) {
+            loadFragment(fragment, true)
+        }
+    }
+
+    fun setBottomNavigationVisibility(visible: Boolean) {
+        if (::binding.isInitialized) {
+            binding.navCard.visibility = if (visible) android.view.View.VISIBLE else android.view.View.GONE
+        }
+    }
+
     private fun setupBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -174,7 +202,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_tasks -> {
-                    loadFragment(UserJobListFragment(), true)
+                    val current = supportFragmentManager.findFragmentById(R.id.fragment_container)
+                    if (current !is UserJobListFragment) {
+                        loadFragment(UserJobListFragment(), true)
+                    }
                     true
                 }
                 R.id.nav_profile -> {

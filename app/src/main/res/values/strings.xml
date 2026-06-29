@@ -72,6 +72,8 @@
     <string name="delete_task">Delete Task</string>
     <string name="remove_image">Remove Task Image</string>
     <string name="update">Update</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="image_label">IMAGE</string>
     <string name="positive_amount">+RM %s</string>
     <string name="negative_amount">-RM %s</string>
     <string name="smart_insight">SMART INSIGHT</string>
@@ -89,5 +91,7 @@
     <string name="suggestion_how_to_give">How to post a job?</string>
     <string name="suggestion_points">How to earn points?</string>
     <string name="bot_welcome">Hello! I am BantuBot. How can I help you today?</string>
+    <string name="suggest_leaderboard">Who\'s leading?</string>
+    <string name="suggest_balance">Check my balance</string>
     <string name="default_web_client_id" translatable="false">155687453657-hq1sibpbjse1mqcio312idfqvdtri3qs.apps.googleusercontent.com</string>
 </resources>

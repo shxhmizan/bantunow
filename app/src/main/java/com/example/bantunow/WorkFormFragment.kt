@@ -13,6 +13,8 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.bantunow.databinding.FragmentWorkFormBinding
+import com.example.bantunow.data.model.Task
+import com.example.bantunow.data.model.UserExtra
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
@@ -50,6 +52,9 @@ class WorkFormFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        // Hide bottom navigation
+        (requireActivity() as? MainActivity)?.setBottomNavigationVisibility(false)
+
         val db = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance()
 
@@ -128,10 +133,36 @@ class WorkFormFragment : Fragment() {
                             taskData["imageUrl"] = imageUri.toString()
                         }
                         transaction.set(newTaskRef, taskData)
-                    }.addOnSuccessListener {
+                        
+                        // Return the task info for the success listener
+                        val resultTask = Task(
+                            taskId = newTaskRef.id,
+                            ownerID = currentUserId,
+                            title = title,
+                            desc = desc,
+                            paymentAmount = (pay * 100).toLong(),
+                            latitude = latitude,
+                            longitude = longitude,
+                            contactNo = phone,
+                            category = category,
+                            imageUrl = if (imageUri != null) imageUri.toString() else null
+                        )
+                        resultTask
+                    }.addOnSuccessListener { task ->
                         if (context == null) return@addOnSuccessListener
                         Toast.makeText(requireContext(), "Task posted! RM $pay deducted from wallet.", Toast.LENGTH_LONG).show()
-                        parentFragmentManager.popBackStack()
+
+                        // Fetch user info to pass to Review Fragment
+                        db.collection("users").document(currentUserId).get().addOnSuccessListener { userDoc ->
+                            val userExtra = userDoc.toObject(UserExtra::class.java)
+                            
+                            val reviewFragment = TaskReviewFragment(task as Task, 0.0, userExtra)
+                            parentFragmentManager.beginTransaction()
+                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                                .replace(R.id.fragment_container, reviewFragment)
+                                .addToBackStack(null)
+                                .commit()
+                        }
                     }.addOnFailureListener { e ->
                         if (context == null) return@addOnFailureListener
                         Log.e("WorkForm", "Transaction failed", e)
@@ -186,6 +217,8 @@ class WorkFormFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Show bottom navigation again
+        (requireActivity() as? MainActivity)?.setBottomNavigationVisibility(true)
         _binding = null
     }
 }

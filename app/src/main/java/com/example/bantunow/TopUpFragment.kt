@@ -6,17 +6,45 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import com.example.bantunow.databinding.FragmentTopupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class TopUpFragment : Fragment() {
+class TopUpFragment : DialogFragment() {
     private var _binding: FragmentTopupBinding? = null
     private val binding get() = _binding!!
+
+    private val malaysianBanks = arrayOf(
+        "Maybank (Maybank2u)",
+        "CIMB Clicks",
+        "Public Bank",
+        "RHB Now",
+        "Hong Leong Connect",
+        "AmOnline",
+        "UOB TMRW",
+        "Bank Islam",
+        "Bank Rakyat",
+        "OCBC Online Banking",
+        "HSBC Online Banking",
+        "Affin Always",
+        "Alliance Online",
+        "Standard Chartered",
+        "MBSB Bank",
+        "Bank Muamalat"
+    )
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentTopupBinding.inflate(inflater, container, false)
@@ -26,7 +54,9 @@ class TopUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
+        setupBankDropdown()
+        
+        binding.btnBack.setOnClickListener { dismiss() }
         
         binding.btnProceed.setOnClickListener {
             val amountStr = binding.etAmount.text.toString()
@@ -35,24 +65,27 @@ class TopUpFragment : Fragment() {
                 return@setOnClickListener
             }
             
-            val selectedBankId = binding.rgBanks.checkedRadioButtonId
-            if (selectedBankId == -1) {
+            val selectedBank = binding.actvBank.text.toString()
+            if (selectedBank.isEmpty()) {
                 Toast.makeText(requireContext(), "Please select a bank", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val amount = amountStr.toDoubleOrNull() ?: 0.0
-            val selectedBank = view.findViewById<RadioButton>(selectedBankId).text.toString()
-
             showConfirmationDialog(amount, selectedBank)
         }
+    }
+
+    private fun setupBankDropdown() {
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, malaysianBanks)
+        binding.actvBank.setAdapter(adapter)
     }
 
     private fun showConfirmationDialog(amount: Double, bank: String) {
         AlertDialog.Builder(requireContext())
             .setTitle("Confirm Top Up")
             .setMessage("Are you sure you want to top up RM ${String.format("%.2f", amount)} via $bank?")
-            .setPositiveButton("Confirm") { _, _ ->
+            .setPositiveButton("Confirm") { dialog, _ ->
                 startMockAuth(amount, bank)
             }
             .setNegativeButton("Cancel", null)
@@ -95,7 +128,7 @@ class TopUpFragment : Fragment() {
         }.addOnSuccessListener {
             Handler(Looper.getMainLooper()).postDelayed({
                 Toast.makeText(requireContext(), "Success! RM $amount added.", Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStack()
+                dismiss()
             }, 1000)
         }.addOnFailureListener { e ->
             Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()

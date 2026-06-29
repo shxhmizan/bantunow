@@ -1,15 +1,21 @@
 package com.example.bantunow
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.bantunow.data.model.Task
+import com.example.bantunow.data.model.UserExtra
 import com.example.bantunow.databinding.FragmentUserJobListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,6 +36,16 @@ class UserJobListFragment : Fragment() {
     private var allPostedTasks: List<Task> = emptyList()
     private var allAcceptedTasks: List<Task> = emptyList()
     private var allHistoryTasks: List<Task> = emptyList()
+
+    private var selectedImageUri: Uri? = null
+    private var currentDialogImageView: ImageView? = null
+
+    private val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let {
+            selectedImageUri = it
+            currentDialogImageView?.setImageURI(it)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -138,6 +154,14 @@ class UserJobListFragment : Fragment() {
 
                 // Apply current filter
                 filterTasks(binding.etSearchTasks.text.toString())
+
+                // Check if we should auto-edit a task
+                arguments?.getString("editTaskId")?.let { editId ->
+                    allPostedTasks.find { it.taskId == editId }?.let { taskToEdit ->
+                        showEditDialog(taskToEdit)
+                        arguments?.remove("editTaskId") // Only edit once
+                    }
+                }
             }
     }
 
@@ -198,15 +222,37 @@ class UserJobListFragment : Fragment() {
         val etPay = dialogView.findViewById<EditText>(R.id.etEditPay)
         val etPhone = dialogView.findViewById<EditText>(R.id.etEditPhone)
         val btnRemoveImg = dialogView.findViewById<View>(R.id.btnRemoveImage)
+        val ivTaskImage = dialogView.findViewById<ImageView>(R.id.ivEditTaskImage)
+        val layoutChangeImage = dialogView.findViewById<View>(R.id.layoutChangeImage)
 
         etTitle.setText(task.title)
         etPay.setText(((task.paymentAmount ?: 0L) / 100).toString())
         etPhone.setText(task.contactNo)
 
+        // Reset selected URI
+        selectedImageUri = null
+        currentDialogImageView = ivTaskImage
+
+        if (!task.imageUrl.isNullOrEmpty()) {
+            Glide.with(this).load(task.imageUrl).placeholder(R.drawable.bg_form_input).into(ivTaskImage)
+            btnRemoveImg.visibility = View.VISIBLE
+        } else {
+            ivTaskImage.setImageResource(R.drawable.bg_form_input)
+            btnRemoveImg.visibility = View.GONE
+        }
+
         var imageRemoved = false
-        btnRemoveImg.visibility = if (task.imageUrl.isNullOrEmpty()) View.GONE else View.VISIBLE
+
+        layoutChangeImage.setOnClickListener {
+            pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            imageRemoved = false
+            btnRemoveImg.visibility = View.VISIBLE
+        }
+
         btnRemoveImg.setOnClickListener {
             imageRemoved = true
+            selectedImageUri = null
+            ivTaskImage.setImageResource(R.drawable.bg_form_input)
             btnRemoveImg.visibility = View.GONE
             Toast.makeText(context, "Image will be removed on save", Toast.LENGTH_SHORT).show()
         }
@@ -214,32 +260,27 @@ class UserJobListFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.edit_task)
             .setView(dialogView)
-            .setPositiveButton(R.string.update) { dialog, _ ->
+            .setPositiveButton(R.string.update) { _, _ ->
                 val newTitle = etTitle.text.toString().trim()
                 val newPay = etPay.text.toString().toDoubleOrNull() ?: 0.0
                 val newPhone = etPhone.text.toString().trim()
 
                 if (newTitle.isNotEmpty()) {
-                    db.collection("tasks")
-                        .whereEqualTo("title", task.title)
-                        .whereEqualTo("ownerID", task.ownerID)
-                        .get()
-                        .addOnSuccessListener { result ->
-                            for (doc in result) {
-                                val updates = mutableMapOf<String, Any>(
-                                    "title" to newTitle,
-                                    "paymentAmount" to (newPay * 100).toLong(),
-                                    "contactNo" to newPhone
-                                )
-                                if (imageRemoved) {
-                                    updates["imageUrl"] = ""
-                                }
-                                
-                                db.collection("tasks").document(doc.id).update(updates)
-                                    .addOnSuccessListener {
-                                        if (isAdded) Toast.makeText(context, "Task updated", Toast.LENGTH_SHORT).show()
-                                    }
-                            }
+                    val taskId = task.taskId ?: return@setPositiveButton
+                    val updates = mutableMapOf<String, Any>(
+                        "title" to newTitle,
+                        "paymentAmount" to (newPay * 100).toLong(),
+                        "contactNo" to newPhone
+                    )
+
+                    when {
+                        imageRemoved -> updates["imageUrl"] = ""
+                        selectedImageUri != null -> updates["imageUrl"] = selectedImageUri.toString()
+                    }
+
+                    db.collection("tasks").document(taskId).update(updates)
+                        .addOnSuccessListener {
+                            if (isAdded) Toast.makeText(context, "Task updated", Toast.LENGTH_SHORT).show()
                         }
                 }
             }
@@ -248,11 +289,17 @@ class UserJobListFragment : Fragment() {
     }
 
     private fun navigateToDetail(task: Task) {
-        val fragment = TaskDetailsFragment.newInstance(task, 0.0, null)
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
+        val ownerId = task.ownerID ?: return
+        db.collection("users").document(ownerId).get().addOnSuccessListener { doc ->
+            if (isAdded) {
+                val userExtra = doc.toObject(UserExtra::class.java)
+                val fragment = TaskDetailsFragment.newInstance(task, 0.0, userExtra)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
     }
 
     override fun onDestroyView() {

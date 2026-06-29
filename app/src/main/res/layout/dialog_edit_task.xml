@@ -1,67 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/task_title"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_secondary_grey" />
-
-    <EditText
-        android:id="@+id/etEditTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp"
-        android:hint="@string/task_title"
-        android:inputType="text" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/task_pay"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_secondary_grey" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/task_title"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary_grey" />
 
-    <EditText
-        android:id="@+id/etEditPay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp"
-        android:hint="@string/task_pay"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/etEditTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:hint="@string/task_title"
+            android:inputType="text"
+            android:background="@drawable/bg_input_rounded"
+            android:padding="12dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/task_phone"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_secondary_grey" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/task_pay"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary_grey" />
 
-    <EditText
-        android:id="@+id/etEditPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp"
-        android:hint="@string/task_phone"
-        android:inputType="phone" />
+        <EditText
+            android:id="@+id/etEditPay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:hint="@string/task_pay"
+            android:inputType="numberDecimal"
+            android:background="@drawable/bg_input_rounded"
+            android:padding="12dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRemoveImage"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/remove_image"
-        android:textColor="@color/accent_coral_faded" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/task_phone"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary_grey" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/etEditPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:hint="@string/task_phone"
+            android:inputType="phone"
+            android:background="@drawable/bg_input_rounded"
+            android:padding="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/image_label"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary_grey" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardEditImage"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#DDDDDD">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/ivEditTaskImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_form_input"
+                    android:contentDescription="@string/image_label" />
+
+                <LinearLayout
+                    android:id="@+id/layoutChangeImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#66000000"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_camera"
+                        app:tint="@color/white"
+                        android:contentDescription="@string/change_photo" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/change_photo"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRemoveImage"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/remove_image"
+            android:textColor="@color/accent_coral_faded" />
+
+    </LinearLayout>
+</ScrollView>

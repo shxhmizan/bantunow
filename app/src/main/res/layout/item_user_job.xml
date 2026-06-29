@@ -12,15 +12,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:padding="16dp">
 
+        <!-- Status Chips and Price Row -->
         <LinearLayout
-            android:id="@+id/ll_status_chips"
-            android:layout_width="0dp"
+            android:id="@+id/ll_status_row"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@+id/tv_job_pay"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -30,11 +30,11 @@
                 android:background="@drawable/bg_input_rounded"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="In Progress"
+                android:text="OPEN"
                 android:textColor="@color/accent_teal"
                 android:textSize="10sp"
                 android:fontFamily="sans-serif-black"
-                android:letterSpacing="0.05" />
+                app:backgroundTint="@color/bg_light_grey" />
 
             <TextView
                 android:id="@+id/tv_role_chip"
@@ -44,36 +44,41 @@
                 android:background="@drawable/bg_input_rounded"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="Performer"
+                android:text="POSTED"
                 android:textColor="@color/text_charcoal"
                 android:textSize="10sp"
                 android:fontFamily="sans-serif-black"
-                android:letterSpacing="0.05" />
+                app:backgroundTint="@color/ui_light_grey" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_job_pay"
+                style="@style/TextAppearance.BantuNow.Heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RM 69"
+                android:textColor="@color/accent_coral_faded"
+                android:textSize="18sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_job_pay"
-            style="@style/TextAppearance.BantuNow.Heading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RM 69"
-            android:textColor="@color/accent_coral_faded"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+        <!-- Main Content Area (Text Left, Image Right) -->
         <TextView
             android:id="@+id/tv_job_title"
             style="@style/TextAppearance.BantuNow.Body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
             android:text="Garden Lamp Wiring"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/iv_chevron"
+            app:layout_constraintEnd_toStartOf="@+id/card_image_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ll_status_chips" />
+            app:layout_constraintTop_toBottomOf="@id/ll_status_row" />
 
         <TextView
             android:id="@+id/tv_job_desc"
@@ -81,33 +86,43 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Want to install new ceiling fan, ceiling already drilled."
+            android:layout_marginEnd="12dp"
+            android:text="Want to install new ceiling fan..."
             android:textColor="@color/text_secondary_grey"
             android:textSize="13sp"
             android:maxLines="2"
             android:ellipsize="end"
-            app:layout_constraintEnd_toStartOf="@+id/iv_chevron"
+            app:layout_constraintEnd_toStartOf="@+id/card_image_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_job_title" />
 
-        <ImageView
-            android:id="@+id/iv_job_image"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_job_desc" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_image_container"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/bg_light_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_job_title"
+            app:layout_constraintBottom_toBottomOf="@+id/ll_distance">
+            <ImageView
+                android:id="@+id/iv_job_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_form_input" />
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:id="@+id/ll_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_job_image">
+            app:layout_constraintTop_toBottomOf="@id/tv_job_desc">
 
             <ImageView
                 android:layout_width="14dp"
@@ -122,23 +137,22 @@
                 android:layout_marginStart="6dp"
                 android:text="140.4 km"
                 android:textColor="@color/text_secondary_grey"
-                android:textSize="11sp"
-                android:fontFamily="sans-serif-medium" />
+                android:textSize="11sp" />
         </LinearLayout>
 
-        <!-- User Info Section (Assigner/Accepter) -->
+        <!-- User Info Footer -->
         <LinearLayout
             android:id="@+id/ll_user_info"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="12dp"
             android:orientation="vertical"
-            android:background="@drawable/bg_dot_gray"
-            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ll_actions"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ll_distance">
 
-            <!-- Assigner Info -->
             <LinearLayout
                 android:id="@+id/ll_assigner"
                 android:layout_width="match_parent"
@@ -161,12 +175,11 @@
                     android:textColor="@color/text_charcoal" />
             </LinearLayout>
 
-            <!-- Accepter Info (Shown to Assigner) -->
             <LinearLayout
                 android:id="@+id/ll_accepter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -175,20 +188,17 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_user"
-                    app:shapeAppearanceOverlay="@style/CircleImage"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/ui_light_grey" />
+                    app:shapeAppearanceOverlay="@style/CircleImage" />
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/tv_accepter_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Accepter Name"
+                        android:text="Performer Name"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_charcoal" />
@@ -196,25 +206,15 @@
                         android:id="@+id/tv_accepter_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rating: 5.0 ★"
+                        android:text="5.0 ★"
                         android:textSize="10sp"
-                        android:textColor="@color/medal_gold" />
+                        android:textColor="@color/brand_terracotta" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_chevron"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_chevron_right"
-            app:layout_constraintBottom_toBottomOf="@id/tv_job_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_job_title"
-            app:tint="@color/border_soft" />
-
-        <!-- Edit/Delete buttons (Refined for Soft UI) -->
         <LinearLayout
+            android:id="@+id/ll_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -223,27 +223,26 @@
 
             <ImageButton
                 android:id="@+id/btn_delete_job"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_delete"
-                android:padding="6dp"
-                android:visibility="gone"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/accent_coral_faded"
-                android:scaleType="fitCenter" />
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_delete"
+                android:visibility="gone"
+                app:tint="@color/accent_coral_faded" />
 
             <ImageButton
                 android:id="@+id/btn_edit_job"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="8dp"
-                android:padding="6dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_edit"
                 android:visibility="gone"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/text_charcoal"
-                android:scaleType="fitCenter" />
+                app:tint="@color/text_charcoal" />
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
